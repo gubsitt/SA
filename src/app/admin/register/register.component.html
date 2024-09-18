@@ -1,0 +1,28 @@
+<div class="wrapper fadeInDown" style="margin-top: 100px;">
+    <div id="formContent">
+      <!-- Tabs Titles -->
+      <h2 class="inactive underlineHover">
+        <a routerLink="/admin/login" style="text-decoration: none; color: inherit;">Sign In</a>
+      </h2>
+      <h2 class="active">Sign Up</h2>
+  
+      <!-- Icon -->
+      <div class="fadeIn first">
+        <img src="https://cdn.discordapp.com/attachments/1285918486211854417/1285918747038584933/Remove-bg.ai_1726657116385.png?ex=66ec04a8&is=66eab328&hm=29742ed79b134f57c874de3a3b4b06d9017ecf495c28fc018db9bdfac696c148&" id="icon" alt="User Icon" /> <!-- ใส่ path ของไอคอนตามต้องการ -->
+      </div>
+  
+      <!-- Register Form -->
+      <form (ngSubmit)="register()">
+        <input type="text" id="username" class="fadeIn second" name="username" placeholder="username" [(ngModel)]="username" required>
+        <input type="email" id="email" class="fadeIn third" name="email" placeholder="email" [(ngModel)]="email" required>
+        <input type="password" id="password" class="fadeIn fourth" name="password" placeholder="password" [(ngModel)]="password" required>
+        <input type="submit" class="fadeIn fifth" value="Sign Up">
+      </form>
+  
+      <!-- Remind Password -->
+      <div id="formFooter">
+        <a class="underlineHover" href="#">Forgot Password?</a>
+      </div>
+    </div>
+  </div>
+  
