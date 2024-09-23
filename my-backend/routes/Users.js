@@ -35,7 +35,12 @@ router.post('/login', async (req, res) => {
       .query('SELECT * FROM Users WHERE Name = @username AND Password = @password');
 
     if (result.recordset.length > 0) {
-      res.json({ message: 'Login successful', token: 'fake-jwt-token' });
+      const user = result.recordset[0];  // ดึงข้อมูลผู้ใช้
+      res.json({ 
+        message: 'Login successful', 
+        token: 'fake-jwt-token', 
+        userId: user.UserID  // เพิ่มการส่ง UserId กลับไป
+      });
     } else {
       res.status(401).json({ error: 'Invalid username or password' });
     }

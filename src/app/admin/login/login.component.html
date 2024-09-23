@@ -1,26 +1,26 @@
 <div class="wrapper fadeInDown" style="margin-top: 100px;">
   <div id="formContent">
     <!-- Tabs Titles -->
-    <h2 class="active"> Sign In </h2>
+    <h2 class="active"> เข้าสู่ระบบ </h2>
     <h2 class="inactive underlineHover">
-      <a routerLink="/admin/register" style="text-decoration: none; color: inherit;">Sign Up</a>
+      <a routerLink="/admin/register" style="text-decoration: none; color: inherit;">ลงทะเบียน</a>
     </h2>
 
     <!-- Icon -->
     <div class="fadeIn first">
-      <img src="https://cdn.discordapp.com/attachments/1285918486211854417/1285918747038584933/Remove-bg.ai_1726657116385.png?ex=66ec04a8&is=66eab328&hm=29742ed79b134f57c874de3a3b4b06d9017ecf495c28fc018db9bdfac696c148&" id="icon" alt="User Icon" /> <!-- ปรับ path ของ icon -->
+      <img src="https://scontent.fbkk22-7.fna.fbcdn.net/v/t39.30808-6/460849097_3837754569800321_5408312247495038661_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFx7N25sVpVcvaJPYdFjzHv0UWEZWOnLg3RRYRlY6cuDfNxP8IukD_1yARH6VJgt2VAlJ2wNjbwGZJpy6tYirRA&_nc_ohc=UB7MA0wmjk4Q7kNvgFT3E4h&_nc_zt=23&_nc_ht=scontent.fbkk22-7.fna&_nc_gid=A7jfA6ORVxqXGqJaa7DbNRi&oh=00_AYA3tt0EHvmS8vh1i5SDRPhdQjpPuYmpmY8PPdorJNdH2w&oe=66F43065" id="icon" alt="User Icon" /> <!-- ปรับ path ของ icon -->
     </div>
 
     <!-- Login Form -->
     <form (ngSubmit)="login()">
-        <input type="text" id="login" class="fadeIn second" name="username" placeholder="Username" [(ngModel)]="username" required>
-        <input type="password" id="password" class="fadeIn third" name="password" placeholder="Password" [(ngModel)]="password" required>
-        <input type="submit" classฆฆ="fadeIn fourth" value="Log In">
+        <input type="text" id="login" class="fadeIn second" name="username" placeholder="ชื่อผู้ใช้" [(ngModel)]="username" required>
+        <input type="password" id="password" class="fadeIn third" name="password" placeholder="รหัสผ่าน" [(ngModel)]="password" required>
+        <input type="submit" class="fadeIn fourth" value="เข้าสู่ระบบ">
       </form>
       
     <!-- Remind Password -->
     <div id="formFooter">
-      <a class="underlineHover" href="#">Forgot Password?</a>
+      <a class="underlineHover" href="#">ลืมรหัสผ่าน?</a>
     </div>
   </div>
 </div>

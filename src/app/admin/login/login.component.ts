@@ -17,14 +17,27 @@ export class LoginComponent {
   login() {
     this.authService.login(this.username, this.password).subscribe(
       response => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Login successful',
-          text: 'Welcome back!',
-        }).then(() => {
-          // นำทางไปยังหน้า dashboard หรือหน้าที่คุณต้องการหลังจากล็อกอินสำเร็จ
-          this.router.navigate(['/home']);
-        });
+        console.log('API response:', response); // เพิ่มการแสดงผล API response
+
+        if (response && response.userId) { 
+          // บันทึก userId ลงใน sessionStorage
+          sessionStorage.setItem('userId', response.userId.toString());
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Login successful',
+            text: 'Welcome back!',
+          }).then(() => {
+            // นำทางไปยังหน้า home หลังจากล็อกอินสำเร็จ
+            this.router.navigate(['/home']);
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Login failed',
+            text: 'Invalid response from server',
+          });
+        }
       },
       error => {
         Swal.fire({
