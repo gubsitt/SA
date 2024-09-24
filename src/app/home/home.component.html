@@ -29,38 +29,8 @@
       </form>
     </div>
 
-    <!-- ฝั่งขวา: ตารางรายรับ -->
-    <div class="col-md-5" id="formContent">
-      <h3 class="active">รายการรายรับ</h3>
-      <table class="table" *ngIf="incomes && incomes.length > 0">
-        <thead>
-          <tr>
-            <th>จำนวนเงิน</th>
-            <th>รายละเอียด</th>
-            <th>วันที่</th>
-            <th>แก้ไข</th>
-            <th>ลบ</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let income of incomes">
-            <td>{{ income.amount | currency }}</td>
-            <td>{{ income.description }}</td>
-            <td>{{ income. date | date: 'short' }}</td>
-            <td><button (click)="editIncome(income)">แก้ไข</button></td>
-            <td><button (click)="deleteIncome(income.id)">ลบ</button></td>
-          </tr>
-        </tbody>
-      </table>
-      <div *ngIf="!incomes || incomes.length === 0">
-        <p>ไม่มีข้อมูลรายรับ</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="row justify-content-between mt-5">
-    <!-- ฝั่งซ้าย: บันทึกรายจ่าย -->
-    <div class="col-md-5" id="formContent">
+    <!-- ฝั่งขวา: บันทึกรายจ่าย -->
+    <div class="col-md-5 equal-height" id="formContent">
       <h2 class="active">บันทึกรายจ่าย</h2>
       <form (ngSubmit)="submitExpense()">
         <div class="mb-3">
@@ -81,6 +51,7 @@
           <label for="isRecurring" class="form-label">รายจ่ายประจำ</label>
           <input type="checkbox" id="isRecurring" [(ngModel)]="expense.isRecurring" name="isRecurring">
         </div>
+
         <!-- ยอดเงินคงเหลือ -->
         <div class="balance-box text-center mb-4">
           <h4>ยอดเงินคงเหลือ</h4>
@@ -90,12 +61,42 @@
         <button type="submit" class="btn btn-primary">บันทึกรายจ่าย</button>
       </form>
     </div>
+  </div>
+</div>
+ 
 
-    <!-- ฝั่งขวา: ตารางรายจ่าย -->
-    <div class="col-md-5" id="formContent">
-      <h3 class="active">รายการรายจ่าย</h3>
-      <table class="table" *ngIf="expenses && expenses.length > 0">
-        <thead>
+<div class="container">
+  <div class="row">
+    <!-- Income Table -->
+    <div class="col-md-6">
+      <h5>รายการรายรับ</h5>
+      <table class="table table-bordered table-hover table-striped">
+        <thead class="thead-dark">
+          <tr>
+            <th>จำนวนเงิน</th>
+            <th>รายละเอียด</th>
+            <th>วันที่</th>
+            <th>แก้ไข</th>
+            <th>ลบ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let income of incomes">
+            <td>{{ income.amount | currency }}</td>
+            <td>{{ income.description }}</td>
+            <td>{{ income.date | date: 'short' }}</td>
+            <td><button class="btn btn-warning btn-sm" (click)="editIncome(income)">แก้ไข</button></td>
+            <td><button class="btn btn-danger btn-sm" (click)="deleteIncome(income.id)">ลบ</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Expense Table -->
+    <div class="col-md-6">
+      <h5>รายการรายจ่าย</h5>
+      <table class="table table-bordered table-hover table-striped">
+        <thead class="thead-dark">
           <tr>
             <th>จำนวนเงิน</th>
             <th>รายละเอียด</th>
@@ -110,18 +111,14 @@
             <td>{{ expense.amount | currency }}</td>
             <td>{{ expense.description }}</td>
             <td>{{ expense.isRecurring ? 'ใช่' : 'ไม่ใช่' }}</td>
-            <td>{{ expense.date | date:'short' }}</td>
-            <td><button (click)="editExpense(expense)">แก้ไข</button></td>
-            <td><button (click)="deleteExpense(expense.id)">ลบ</button></td>
+            <td>{{ expense.date | date: 'short' }}</td>
+            <td><button class="btn btn-warning btn-sm" (click)="editExpense(expense)">แก้ไข</button></td>
+            <td><button class="btn btn-danger btn-sm" (click)="deleteExpense(expense.id)">ลบ</button></td>
           </tr>
         </tbody>
       </table>
-      <div *ngIf="!expenses || expenses.length === 0">
-        <p>ไม่มีข้อมูลรายจ่าย</p>
-      </div>
     </div>
   </div>
 </div>
-
 
 

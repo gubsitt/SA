@@ -18,7 +18,7 @@ router.post('/expenses', async (req, res) => {
       .input('categoryId', sql.Int, categoryId)
       .input('isRecurring', sql.Bit, isRecurring)
       .input('userId', sql.Int, userId)
-      .query('INSERT INTO Expenses (Amount, Description, CategoryId, IsRecurring, UserID, Date) VALUES (@amount, @description, @categoryId, @isRecurring, @userId, GETDATE())');
+      .query('INSERT INTO Expenses (amount, description, CategoryId, isRecurring, UserID, date) VALUES (@amount, @description, @categoryId, @isRecurring, @userId, GETDATE())');
 
     res.json({
       message: 'Expense saved successfully',

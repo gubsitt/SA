@@ -1,1 +1,55 @@
-<p>wallet works!</p>
+<div class="outer-wrapper">
+    <header class="header">
+        <div class="header-left">
+            <h1>กระเป๋าเงิน</h1>
+        </div>
+    </header>
+
+    <section class="wallet-summary">
+        <div class="balance">
+            <h2>ยอดคงเหลือ</h2>
+            <p>฿251,094</p>
+        </div>
+        <div class="income-expense">
+            <div class="income">
+                <h3>รายรับ</h3>
+                <p>฿120,000</p>
+            </div>
+            <div class="expense">
+                <h3>รายจ่าย</h3>
+                <p>฿100,000</p>
+            </div>
+        </div>
+    </section>
+<div class="content">
+        <section class="transaction-history">
+            <h2>ประวัติการทำธุรกรรม</h2>
+            <div class="transaction">
+                <div class="transaction-icon">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1037/1037762.png" alt="Expense Icon">
+                </div>
+                <div class="transaction-details">
+                    <h3>ค่าใช้จ่าย</h3>
+                    <p>-฿2,000</p>
+                </div>
+                <div class="transaction-type expense">จ่าย</div>
+            </div>
+
+            <div class="transaction">
+                <div class="transaction-icon">
+                    <img src="https://cdn-icons-png.flaticon.com/128/817/817729.png" alt="Income Icon">
+                </div>
+                <div class="transaction-details">
+                    <h3>รายรับ</h3>
+                    <p>฿10,000</p>
+                </div>
+                <div class="transaction-type income">รับ</div>
+            </div>
+        </section>
+
+        <section class="chart-section">
+            <h2>การวิเคราะห์การใช้จ่าย</h2>
+            <canvas id="expenseChart"></canvas>
+        </section>
+    </div>
+</div>

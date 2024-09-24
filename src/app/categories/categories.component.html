@@ -2,75 +2,32 @@
     <div class="wrapper">
         <div class="header">
             <h2>หมวดหมู่</h2>
-          
         </div>
-  
+
         <div class="category-list">
-            <div class="category-item">
-                <img src="https://cdn-icons-png.flaticon.com/128/1037/1037762.png" alt="อาหาร">
-                <p>อาหาร</p>
-                <button class="edit-btn">=</button>
+            <!-- ใช้ ngFor เพื่อแสดงรายการหมวดหมู่จากฐานข้อมูล -->
+            <div class="category-item" *ngFor="let category of incomeCategories">
+                <img src="https://cdn-icons-png.flaticon.com/128/817/817729.png" alt="{{ category.CategoryName }}">
+                <p>{{ category.CategoryName }}</p>
+                <button class="edit-btn" (click)="deleteIncomeCategory(category.CategoryId)">-</button>
             </div>
-            <div class="category-item">
-                <img src="https://cdn-icons-png.flaticon.com/128/2555/2555013.png" alt="จราจร">
-                <p>จราจร</p>
-                <button class="edit-btn">=</button>
+            <div class="category-item" *ngFor="let category of expenseCategories">
+                <img src="https://cdn-icons-png.flaticon.com/128/5501/5501371.png" alt="{{ category.CategoryName }}">
+                <p>{{ category.CategoryName }}</p>
+                <button class="edit-btn" (click)="deleteExpenseCategory(category.CategoryId)">-</button>
             </div>
-            <div class="category-item">
-                <img src="https://cdn-icons-png.flaticon.com/128/942/942759.png" alt="รายวัน">
-                <p>รายวัน</p>
-                <button class="edit-btn">=</button>
-            </div>
-            <div class="category-item">
-                <img src="https://cdn-icons-png.flaticon.com/128/2977/2977173.png" alt="ทางสังคม">
-                <p>สังคม</p>
-                <button class="edit-btn">=</button>
-            </div>
-            <div class="category-item">
-              <img src="https://cdn-icons-png.flaticon.com/512/2921/2921823.png" alt="สื่อสาร">
-              <p>สื่อสาร</p>
-              <button class="edit-btn">=</button>
-          </div>
-          <div class="category-item">
-            <img src="https://cdn-icons-png.flaticon.com/128/2544/2544087.png" alt="ที่อยู่อาศัย">
-            <p>ที่อยู่อาศัย</p>
-            <button class="edit-btn">=</button>
         </div>
-        <div class="category-item">
-          <img src="https://cdn-icons-png.flaticon.com/128/1359/1359323.png" alt="ของขวัญ">
-          <p>ของขวัญ</p>
-          <button class="edit-btn">=</button>
-      </div>
-  <div class="category-item">
-        <img src="https://cdn-icons-png.flaticon.com/128/1312/1312091.png" alt="ความงาม">
-        <p>ความงาม</p>
-        <button class="edit-btn">=</button>
-    </div>
-    <div class="category-item">
-      <img src="https://cdn-icons-png.flaticon.com/128/4700/4700976.png" alt="เสื้อผ้า">
-      <p>เสื้อผ้า</p>
-      <button class="edit-btn">=</button>
-  </div>
-  <div class="category-item">
-    <img src="https://cdn-icons-png.flaticon.com/128/4813/4813989.png" alt="ทางการเเพทย์">
-    <p>เเพทย์</p>
-    <button class="edit-btn">=</button>
-  </div>
-  <div class="category-item">
-    <img src="https://cdn-icons-png.flaticon.com/128/3981/3981054.png" alt="นันทนาการ">
-    <p>นันทนาการ</p>
-    <button class="edit-btn">=</button>
-  </div>
-  <div class="category-item">
-    <img src="https://cdn-icons-png.flaticon.com/128/1651/1651969.png" alt="ภาษี">
-    <p>ภาษี</p>
-    <button class="edit-btn">=</button>
-  </div>
-            <!-- เพิ่มหมวดหมู่ตามต้องการ -->
-        </div>
-  
+
         <div class="add-category">
-            <button>+ เพิ่ม</button>
+            <h3>เพิ่มหมวดหมู่รายรับ</h3>
+            <input type="text" placeholder="ชื่อหมวดหมู่" [(ngModel)]="newIncomeCategory">
+            <button (click)="addIncomeCategory()">+ เพิ่ม</button>
+        </div>
+
+        <div class="add-category">
+            <h3>เพิ่มหมวดหมู่รายจ่าย</h3>
+            <input type="text" placeholder="ชื่อหมวดหมู่" [(ngModel)]="newExpenseCategory">
+            <button (click)="addExpenseCategory()">+ เพิ่ม</button>
         </div>
     </div>
-  </div>
+</div>

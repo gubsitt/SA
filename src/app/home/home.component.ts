@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { IncomeExpenseService } from '../service/income-expene.service'; 
 import { BalanceService } from '../service/balance.service';
 
@@ -43,8 +43,9 @@ export class HomeComponent implements OnInit {
   userId: number = 0;
 
   constructor(
-    private incomeExpenseService: IncomeExpenseService,
-    private balanceService: BalanceService
+      private incomeExpenseService: IncomeExpenseService,
+      private balanceService: BalanceService,
+      private cdRef: ChangeDetectorRef // เพิ่มนี้
   ) {}
 
   ngOnInit() {
@@ -52,8 +53,10 @@ export class HomeComponent implements OnInit {
     this.loadCategories();
     this.loadBalance();
     this.loadIncomesAndExpenses();
+    
     console.log("Incomes:", this.incomes);
     console.log("Expenses:", this.expenses);
+    
   }
 
   loadUserId() {
@@ -90,6 +93,7 @@ export class HomeComponent implements OnInit {
       this.incomeExpenseService.getIncomes(this.userId).subscribe(
         (response: any) => {
           this.incomes = response.incomes;
+          this.cdRef.detectChanges();
           console.log(this.incomes);  // ตรวจสอบข้อมูลใน console
         },
         (error) => {
@@ -100,6 +104,7 @@ export class HomeComponent implements OnInit {
       this.incomeExpenseService.getExpenses(this.userId).subscribe(
         (response: any) => {
           this.expenses = response.expenses;
+          this.cdRef.detectChanges();
           console.log(this.expenses);  // ตรวจสอบข้อมูลใน console
         },
         (error) => {
@@ -111,6 +116,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
+
   submitIncome() {
     if (this.userId > 0) {
       this.incomeExpenseService.submitIncome(this.income.amount, this.income.description, this.income.categoryId, this.userId).subscribe(
@@ -118,6 +124,7 @@ export class HomeComponent implements OnInit {
           this.incomes.push(response.income);
           this.income = { id: 0, amount: 0, description: '', categoryId: 0 };
           this.updateBalance();
+          this.cdRef.detectChanges(); // บังคับให้ Angular ตรวจสอบและอัปเดต view
         },
         (error) => {
           console.error('Error submitting income:', error);
@@ -135,6 +142,7 @@ export class HomeComponent implements OnInit {
           this.expenses.push(response.expense);
           this.expense = { id: 0, amount: 0, description: '', isRecurring: false, categoryId: 0 };
           this.updateBalance();
+          this.cdRef.detectChanges(); // บังคับให้ Angular ตรวจสอบและอัปเดต view
         },
         (error) => {
           console.error('Error submitting expense:', error);
@@ -144,7 +152,6 @@ export class HomeComponent implements OnInit {
       console.error('No valid userId found.');
     }
   }
-
   loadBalance() {
     this.balanceService.getBalance(this.userId).subscribe(
       (response) => {

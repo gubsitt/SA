@@ -17,7 +17,7 @@ router.post('/incomes', async (req, res) => {
       .input('description', sql.NVarChar, description)
       .input('categoryId', sql.Int, categoryId)
       .input('userId', sql.Int, userId)
-      .query('INSERT INTO Incomes (Amount, Description, CategoryId, UserID, Date) VALUES (@amount, @description, @categoryId, @userId, GETDATE())');
+      .query('INSERT INTO Incomes (amount, description, CategoryId, UserID, date) VALUES (@amount, @description, @categoryId, @userId, GETDATE())');
 
     res.json({
       message: 'Income saved successfully',
