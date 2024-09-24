@@ -1,1 +1,75 @@
-<p>analysis works!</p>
+<div class="outer-wrapper">
+    <!-- Container ที่ครอบเนื้อหาทั้งหมด -->
+    <div class="inner-container">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-center">
+          <h1>การวิเคราะห์ข้อมูล</h1>
+        </div>
+      </header>
+  
+      <!-- Navigation Tabs -->
+      <nav class="tabs">
+        <button class="tab active" onclick="showSection('expenses')">รายจ่ายประจำ</button>
+        <button class="tab" onclick="showSection('expenses2')">รายจ่าย</button>
+        <button class="tab" onclick="showSection('income')">รายได้</button>
+        <button class="tab" onclick="showSection('budget')">งบประมาณ</button>
+      </nav>
+  
+      <!-- Content -->
+      <div class="content">
+        <!-- Section for รายจ่ายประจำ -->
+        <section id="expenses" class="section">
+          <!-- Chart Section -->
+          <div class="chart-container">
+            <canvas id="myChart"></canvas>
+          </div>
+  
+          <!-- Details Section -->
+          <div class="details-container mt-4">
+            <h3>รายละเอียดค่าใช้จ่าย</h3>
+            <div class="detail-item">
+              <div class="icon">
+                <img src="https://cdn-icons-png.flaticon.com/128/2544/2544087.png" alt="ที่อยู่อาศัย">
+              </div>
+              <div class="text">ที่อยู่อาศัย: ฿18,500 (35%)</div>
+            </div>
+            <div class="detail-item">
+              <div class="icon"><img src="https://cdn-icons-png.flaticon.com/128/2555/2555013.png" alt="จราจร"></div>
+              <div class="text">การเดินทาง: ฿17,500 (35%)</div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+  <script>
+    // สลับการแสดงผลเมื่อคลิกที่ Tab
+    function showSection(section) {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(sec => sec.classList.add('hidden'));
+      document.getElementById(section).classList.remove('hidden');
+  
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      document.querySelector(button[onclick="showSection('${section}')"]).classList.add('active');
+    }
+  
+    // การตั้งค่ากราฟ Doughnut
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['ที่อยู่อาศัย', 'การเดินทาง', 'อาหาร', 'ความบันเทิง'],
+        datasets: [{
+          label: 'ค่าใช้จ่าย',
+          data: [18500, 17500, 10000, 5000],
+          backgroundColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+  </script>

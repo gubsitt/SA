@@ -22,7 +22,7 @@
         <!-- ยอดเงินคงเหลือ -->
         <div class="balance-box text-center mb-4">
           <h4>ยอดเงินคงเหลือ</h4>
-          <h3>{{ balance | currency }}</h3>
+          <h3>{{ balance | number: '1.2-2' }} THB</h3>
         </div>
 
         <button type="submit" class="btn btn-primary">บันทึกรายรับ</button>
@@ -55,7 +55,7 @@
         <!-- ยอดเงินคงเหลือ -->
         <div class="balance-box text-center mb-4">
           <h4>ยอดเงินคงเหลือ</h4>
-          <h3>{{ balance | currency }}</h3>
+          <h3>{{ balance | number: '1.2-2' }} THB</h3>
         </div>  
 
         <button type="submit" class="btn btn-primary">บันทึกรายจ่าย</button>
@@ -82,7 +82,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let income of incomes">
-            <td>{{ income.amount | currency }}</td>
+            <td>{{ income.amount | number: '1.2-2' }} THB</td>
             <td>{{ income.description }}</td>
             <td>{{ income.date | date: 'short' }}</td>
             <td><button class="btn btn-warning btn-sm" (click)="editIncome(income)">แก้ไข</button></td>
@@ -108,7 +108,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let expense of expenses">
-            <td>{{ expense.amount | currency }}</td>
+            <td>{{ expense.amount | number: '1.2-2' }} THB</td>
             <td>{{ expense.description }}</td>
             <td>{{ expense.isRecurring ? 'ใช่' : 'ไม่ใช่' }}</td>
             <td>{{ expense.date | date: 'short' }}</td>
