@@ -8,6 +8,7 @@ import { AnalysisComponent } from './analysis/analysis.component';
 import { BudgetComponent } from './budget/budget.component';
 import { AdditionalComponent } from './additional/additional.component';  
 import { CategoriesComponent } from './categories/categories.component';
+import { ExcelComponent } from './excel/excel.component';
 
 const routes: Routes = [ 
   { path: '', redirectTo: 'home', pathMatch: 'full' }, 
@@ -18,7 +19,8 @@ const routes: Routes = [
   { path: 'analysis', component: AnalysisComponent },
   { path: 'budget', component: BudgetComponent },
   { path: 'additional', component: AdditionalComponent },
-  { path: 'categories', component: CategoriesComponent }
+  { path: 'categories', component: CategoriesComponent },
+  { path: 'excel', component: ExcelComponent }
 ];
 
 @NgModule({

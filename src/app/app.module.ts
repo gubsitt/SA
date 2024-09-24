@@ -11,7 +11,8 @@ import { WalletComponent } from './wallet/wallet.component';
 import { AnalysisComponent } from './analysis/analysis.component';
 import { BudgetComponent } from './budget/budget.component';
 import { AdditionalComponent } from './additional/additional.component';
-import { CategoriesComponent } from './categories/categories.component'; // Import FormsModule ที่นี่
+import { CategoriesComponent } from './categories/categories.component';
+import { ExcelComponent } from './excel/excel.component'; // Import FormsModule ที่นี่
 
 
 
@@ -25,7 +26,8 @@ import { CategoriesComponent } from './categories/categories.component'; // Impo
     AnalysisComponent,
     BudgetComponent,
     AdditionalComponent,
-    CategoriesComponent
+    CategoriesComponent,
+    ExcelComponent
   ],
   imports: [
     HttpClientModule,
