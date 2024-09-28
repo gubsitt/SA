@@ -1,92 +1,59 @@
-@import url('https://fonts.googleapis.com/css?family=Poppins');
-
-html {
-  background-color: #56baed;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-body {
-  font-family: "Poppins", sans-serif;
-  height: 100vh;
+html, body {
+  font-family: Arial, sans-serif;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #78dbff;
 }
 
-h2, h3 {
-  text-align: center;
-  font-size: 18px;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #0d0d0d;
-  margin-bottom: 20px;
+.outer-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 140vh;
+  width: 100%;
+  background-color: #78dbff;  
 }
 
 .wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 1400px;
+}
+
+.header {
+  background-color: #00aeff;
+  padding: 15px 25px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  color: white;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .row {
   display: flex;
   justify-content: space-between;
-  width: 100%;
 }
 
-#formContent {
-  border-radius: 10px;
-  background: #ffffff;
-  padding: 20px;
-  width: 100%;
-  max-width: 500px;
-  margin: 10px;
-  box-shadow: 0 30px 60px #5fbae9;
-  text-align: left;
+h3, h5 {
+  font-size: 22px;
+  color: #333;
 }
 
 .table {
   width: 100%;
   margin-top: 20px;
-}
-
-input[type=submit] {
-  background-color: #56baed;
-  border: none;
-  color: white;
-  padding: 10px 30px;
-  font-size: 14px;
-  border-radius: 5px;
-  transition: all 0.3s ease-in-out;
-}
-
-input[type=submit]:hover {
-  background-color: #39ace7;
-  cursor: pointer;
-}
-
-input[type=number], input[type=text], select, .form-check-input {
-  background-color: #abc9ec;
-  border: none;
-  color: #0d0d0d;
-  padding: 10px;
-  font-size: 16px;
-  width: 100%;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  border: 2px solid #5fbae9;
-}
-
-input[type=number]:focus, input[type=text]:focus, select:focus {
-  background-color: #fff;
-  border-bottom: 2px solid #5fbae9;
-}
-
-label {
-  font-weight: 500;
-  color: #0d0d0d;
-}
-
-h3 {
-  margin-top: 30px;
-  font-size: 16px;
 }
 
 table {
@@ -98,59 +65,78 @@ table {
 th, td {
   padding: 10px;
   text-align: left;
-  border-bottom: 1px solid #5fbae9;
+  border-bottom: 1px solid #ddd;
 }
 
 th {
   background-color: #abc9ec;
-  font-weight: 600;
+  font-weight: bold;
 }
 
 tbody tr:hover {
   background-color: #f1f1f1;
+  cursor: pointer; /* เพิ่ม cursor pointer เมื่อชี้ที่แถว */
 }
 
-input[type=submit] {
-    background-color: #56baed;
-    border: none;
-    color: white;
-    padding: 10px 30px;
-    font-size: 14px;
-    border-radius: 5px;
-    transition: all 0.3s ease-in-out;
-    width: 100%; /* กำหนดให้ปุ่มมีความกว้าง 100% */
-  }
-  
-  input[type=submit]:hover {
-    background-color: #39ace7;
-    cursor: pointer;
-  }
-  
-  /* ตั้งค่าการจัดการทั่วไปของปุ่ม */
-button[type="submit"] {
-  background-color: #56baed;
-  border: none;
-  color: white;
-  padding: 10px 30px;
-  font-size: 14px;
-  border-radius: 5px;
-  transition: all 0.3s ease-in-out;
-  width: 100%; /* ให้ปุ่มกว้างเต็มพื้นที่ */
-  text-align: center; /* จัดข้อความให้อยู่กึ่งกลาง */
-  max-width: 250px; /* จำกัดความกว้างสูงสุดของปุ่ม */
-  display: block;
-  margin: 0 auto; /* จัดปุ่มให้อยู่กึ่งกลางใน container */
-}
-
-button[type="submit"]:hover {
-  background-color: #39ace7;
-  cursor: pointer;
-}
-
-/* ทำให้ฟอร์มรายรับและรายจ่ายมีการจัดเรียงปุ่มตรงกัน */
-.form-footer {
+.save-item {
+  background-color: #f9f9f9;
+  padding: 30px 20px; /* เพิ่ม padding ด้านบนและล่าง */
+  border-radius: 20px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-bottom: 20px;
   display: flex;
-  justify-content: center; /* จัดปุ่มให้อยู่ตรงกลาง */
-  margin-top: 20px; /* เพิ่มช่องว่างด้านบน */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s, box-shadow 0.3s; /* เพิ่ม transition */
 }
 
+.save-item:hover {
+  transform: scale(1.01); /* ขยายขนาดเล็กน้อยเมื่อชี้ */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* เพิ่มเงาลึกขึ้น */
+}
+
+.save-item img {
+  width: 80px;
+  height: 80px;
+  margin-top: 20px; /* เพิ่มช่องว่างด้านบน */
+  margin-bottom: 20px; /* เพิ่มช่องว่างด้านล่าง */
+}
+
+.budget-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 20px; /* เพิ่มช่องว่างระหว่าง input กับปุ่ม */
+}
+
+.save-btn {
+  background-color: #00aeff;
+  color: white;
+  border: none;
+  padding: 15px;
+  font-size: 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 250px;
+  margin: 20px auto;
+  display: block;
+  transition: background-color 0.3s ease, transform 0.3s ease; /* เพิ่ม transition */
+}
+
+.save-btn:hover {
+  background-color: #0088cc;
+  transform: scale(1.05); /* ขยายขนาดเล็กน้อยเมื่อชี้ */
+}
+
+.balance-box {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+}

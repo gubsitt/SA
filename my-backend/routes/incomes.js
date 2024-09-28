@@ -31,15 +31,22 @@ router.post('/incomes', async (req, res) => {
 
 // GET route สำหรับดึงหมวดหมู่รายรับ
 router.get('/income-categories', async (req, res) => {
+  const { userId } = req.query;  // ตรวจสอบว่ามีการรับ userId
+  if (!userId) {
+    return res.status(400).json({ error: 'User ID is required' });
+  }
   try {
     const pool = await poolPromise;
-    const result = await pool.request().query('SELECT * FROM IncomeCategories');
+    const result = await pool.request()
+      .input('userId', sql.Int, userId)
+      .query('SELECT * FROM IncomeCategories WHERE UserId = @userId');  // ตรวจสอบว่ามีการใช้งาน userId ในการค้นหา
     res.json(result.recordset);
   } catch (err) {
     console.error('Error fetching income categories:', err);
-    res.status(500).json({ error: 'Failed to fetch income categories' });
+    res.status(500).json({ error: 'Error fetching income categories' });
   }
 });
+
 
 // GET route สำหรับดึงข้อมูลรายรับทั้งหมดของผู้ใช้
 router.get('/incomes', async (req, res) => {
@@ -66,7 +73,7 @@ router.delete('/incomes/:id', async (req, res) => {
     const pool = await poolPromise;
     const result = await pool.request()
       .input('incomeId', sql.Int, incomeId)
-      .query('DELETE FROM Incomes WHERE IncomeId = @incomeId');
+      .query('DELETE FROM Incomes WHERE incomeId = @incomeId');
 
     if (result.rowsAffected[0] === 0) {
       return res.status(404).json({ message: 'Income not found' });
@@ -80,12 +87,29 @@ router.delete('/incomes/:id', async (req, res) => {
 });
 
 // PUT route สำหรับแก้ไขรายรับ
-router.put('/incomes/:id', async (req, res) => {
-  const { id } = req.params;
-  const { amount, description, categoryId, userId } = req.body;
+router.put('/incomes/:incomeId', async (req, res) => {
+  const { incomeId } = req.params;  // ใช้ id ที่ดึงมาจาก URL params
+  const { amount, description, CategoryId, UserID } = req.body;  // ดึงค่าจาก request body
 
-  if (!id || !amount || !description || !categoryId || !userId) {
-    return res.status(400).json({ error: 'Missing required fields' });
+  // ตรวจสอบข้อมูลที่รับมาจาก frontend
+  console.log('Request params:', req.params);
+  console.log('Request body:', req.body);
+
+  // ตรวจสอบว่าข้อมูลครบถ้วนหรือไม่
+  if (!incomeId) {
+    return res.status(400).json({ error: 'Income ID is missing' });
+  }
+  if (!amount) {
+    return res.status(400).json({ error: 'Amount is missing' });
+  }
+  if (!description) {
+    return res.status(400).json({ error: 'Description is missing' });
+  }
+  if (!CategoryId) {
+    return res.status(400).json({ error: 'Category ID is missing' });
+  }
+  if (!UserID) {
+    return res.status(400).json({ error: 'User ID is missing' });
   }
 
   try {
@@ -93,20 +117,25 @@ router.put('/incomes/:id', async (req, res) => {
     const result = await pool.request()
       .input('amount', sql.Decimal(18, 2), amount)
       .input('description', sql.NVarChar, description)
-      .input('categoryId', sql.Int, categoryId)
-      .input('userId', sql.Int, userId)
-      .input('id', sql.Int, id)
-      .query('UPDATE Incomes SET Amount = @amount, Description = @description, CategoryId = @categoryId, UserID = @userId WHERE IncomeId = @id');
+      .input('categoryId', sql.Int, CategoryId)
+      .input('userId', sql.Int, UserID)
+      .input('incomeId', sql.Int, incomeId)  // ใช้ id ที่ดึงมาจาก params
+      .query('UPDATE Incomes SET amount = @amount, description = @description, CategoryId = @categoryId, UserID = @userId WHERE incomeId = @incomeId');
 
+    // ตรวจสอบว่าอัปเดตสำเร็จหรือไม่ (ถ้าไม่มีแถวถูกอัปเดต แสดงว่าไม่พบข้อมูล)
     if (result.rowsAffected[0] === 0) {
       return res.status(404).json({ message: 'Income not found' });
     }
 
+    // ส่ง response เมื่ออัปเดตสำเร็จ
     res.json({ message: 'Income updated successfully' });
   } catch (err) {
     console.error('Error updating income:', err);
     res.status(500).json({ error: 'Error updating income' });
   }
 });
+
+
+
 
 module.exports = router;

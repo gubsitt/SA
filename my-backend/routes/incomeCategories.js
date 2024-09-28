@@ -1,45 +1,54 @@
-const express = require('express');
-const router = express.Router();
-const { sql, poolPromise } = require('../config/dbconfig');
+  const express = require('express');
+  const router = express.Router();
+  const { sql, poolPromise } = require('../config/dbconfig');
 
-// POST route สำหรับเพิ่มหมวดหมู่รายรับ
+  // POST route สำหรับเพิ่มหมวดหมู่รายรับ
 router.post('/income-categories', async (req, res) => {
-    const { categoryName } = req.body;
-    console.log('Received category name:', categoryName); // ตรวจสอบข้อมูลที่ส่งมา
-    
-    if (!categoryName) {
-      return res.status(400).json({ error: 'Category name is required' });
-    }
-  
-    try {
-      const pool = await poolPromise;
-      await pool.request()
-        .input('categoryName', sql.NVarChar, categoryName)
-        .query('INSERT INTO IncomeCategories (CategoryName) VALUES (@categoryName)');
-  
-      res.json({ message: 'Income category added successfully' });
-    } catch (err) {
-      console.error('Error adding income category:', err);
-      res.status(500).json({ error: 'Error adding income category' });
-    }
-  });
-  
+  const { categoryName, userId } = req.body;  // รับ userId มาจาก request
 
-// DELETE route สำหรับลบหมวดหมู่รายรับ
-router.delete('/income-categories/:id', async (req, res) => {
-  const incomeCategoryId = req.params.id;  // เปลี่ยนชื่อเป็น incomeCategoryId
+  if (!categoryName || !userId) {
+    return res.status(400).json({ error: 'Category name and userId are required' });
+  }
 
   try {
     const pool = await poolPromise;
     await pool.request()
-      .input('incomeCategoryId', sql.Int, incomeCategoryId)  // ใช้ incomeCategoryId แทน
-      .query('DELETE FROM IncomeCategories WHERE CategoryId = @incomeCategoryId');
+      .input('categoryName', sql.NVarChar, categoryName)
+      .input('userId', sql.Int, userId)  // เพิ่ม userId เข้าไปในคำสั่ง SQL
+      .query('INSERT INTO IncomeCategories (CategoryName, UserId) VALUES (@categoryName, @userId)');
 
-    res.json({ message: 'Income category deleted successfully' });
+    res.json({ message: 'Income category added successfully' });
   } catch (err) {
-    console.error('Error deleting income category:', err);
-    res.status(500).json({ error: 'Error deleting income category' });
+    console.error('Error adding income category:', err);
+    res.status(500).json({ error: 'Error adding income category' });
   }
 });
 
-module.exports = router;
+    
+
+  // DELETE route สำหรับลบหมวดหมู่รายรับ
+router.delete('/income-categories/:id', async (req, res) => {
+  const incomeCategoryId = req.params.id;
+  const userId = req.query.userId; // รับ userId มาจาก query parameter
+
+  if (!userId) {
+      return res.status(400).json({ error: 'UserId is required' });
+  }
+
+  try {
+      const pool = await poolPromise;
+      await pool.request()
+        .input('incomeCategoryId', sql.Int, incomeCategoryId)
+        .input('userId', sql.Int, userId)  // เช็คว่าเป็นหมวดหมู่ของ user นั้นจริง
+        .query('DELETE FROM IncomeCategories WHERE CategoryId = @incomeCategoryId AND UserId = @userId');
+
+      res.json({ message: 'Income category deleted successfully' });
+  } catch (err) {
+      console.error('Error deleting income category:', err);
+      res.status(500).json({ error: 'Error deleting income category' });
+  }
+});
+
+
+
+  module.exports = router;

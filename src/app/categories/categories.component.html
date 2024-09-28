@@ -18,16 +18,22 @@
             </div>
         </div>
 
-        <div class="add-category">
-            <h3>เพิ่มหมวดหมู่รายรับ</h3>
-            <input type="text" placeholder="ชื่อหมวดหมู่" [(ngModel)]="newIncomeCategory">
-            <button (click)="addIncomeCategory()">+ เพิ่ม</button>
-        </div>
+        <div class="add-category-container">
+            <div class="add-category">
+                <h3>เพิ่มหมวดหมู่รายรับ</h3>
+                <div class="input-group">
+                    <input type="text" placeholder="ชื่อหมวดหมู่" [(ngModel)]="newIncomeCategory">
+                    <button (click)="addIncomeCategory()">+ เพิ่ม</button>
+                </div>
+            </div>
 
-        <div class="add-category">
-            <h3>เพิ่มหมวดหมู่รายจ่าย</h3>
-            <input type="text" placeholder="ชื่อหมวดหมู่" [(ngModel)]="newExpenseCategory">
-            <button (click)="addExpenseCategory()">+ เพิ่ม</button>
+            <div class="add-category">
+                <h3>เพิ่มหมวดหมู่รายจ่าย</h3>
+                <div class="input-group">
+                    <input type="text" placeholder="ชื่อหมวดหมู่" [(ngModel)]="newExpenseCategory">
+                    <button (click)="addExpenseCategory()">+ เพิ่ม</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

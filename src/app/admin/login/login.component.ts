@@ -3,7 +3,6 @@ import { AuthService } from '../../service/auth.service'; // ปรับเส�
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -26,8 +25,8 @@ export class LoginComponent {
 
           Swal.fire({
             icon: 'success',
-            title: 'Login successful',
-            text: 'Welcome back!',
+            title: 'เข้าสู่ระบบสำเร็จ',
+            text: 'ยินดีต้อนรับกลับมา!',
           }).then(() => {
             // นำทางไปยังหน้า home หลังจากล็อกอินสำเร็จ
             this.router.navigate(['/home']);
@@ -35,16 +34,16 @@ export class LoginComponent {
         } else {
           Swal.fire({
             icon: 'error',
-            title: 'Login failed',
-            text: 'Invalid response from server',
+            title: 'เข้าสู่ระบบไม่สำเร็จ',
+            text: 'ข้อมูลที่ได้รับจากเซิร์ฟเวอร์ไม่ถูกต้อง',
           });
         }
       },
       error => {
         Swal.fire({
           icon: 'error',
-          title: 'Login failed',
-          text: 'Invalid username or password',
+          title: 'เข้าสู่ระบบไม่สำเร็จ',
+          text: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',
         });
       }
     );

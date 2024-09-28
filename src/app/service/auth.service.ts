@@ -14,28 +14,20 @@ export class AuthService {
   register(username: string, email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, { username, email, password });
   }
+
   // ฟังก์ชันสำหรับล็อกอิน
   login(username: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, { username, password });
   }
 
-   // ฟังก์ชันสำหรับบันทึกรายรับ
-   submitIncome(amount: number, description: string, categoryId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/incomes`, { amount, description, categoryId });
+  // ฟังก์ชันสำหรับออกจากระบบ
+  logout(): void {
+    sessionStorage.removeItem('userId'); // ลบข้อมูล userId จาก sessionStorage
+    sessionStorage.clear(); // หรือล้างข้อมูลทั้งหมดใน sessionStorage ถ้าต้องการ
   }
 
-  // ฟังก์ชันสำหรับบันทึกรายจ่าย
-  submitExpense(amount: number, description: string, categoryId: number, isRecurring: boolean): Observable<any> {
-    return this.http.post(`${this.apiUrl}/expenses`, { amount, description, categoryId, isRecurring });
-  }
-
-  // ฟังก์ชันสำหรับดึงหมวดหมู่รายรับ
-  getIncomeCategories(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/income-categories`);
-  }
-
-  // ฟังก์ชันสำหรับดึงหมวดหมู่รายจ่าย
-  getExpenseCategories(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/expense-categories`);
+  // ฟังก์ชันสำหรับตรวจสอบสถานะการล็อกอิน
+  isLoggedIn(): boolean {
+    return !!sessionStorage.getItem('userId'); // ตรวจสอบว่ามี userId ใน sessionStorage หรือไม่
   }
 }

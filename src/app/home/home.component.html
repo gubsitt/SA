@@ -1,124 +1,127 @@
-<div class="container wrapper fadeInDown">
-  <div class="row justify-content-between">
-    <!-- ฝั่งซ้าย: บันทึกรายรับ -->
-    <div class="col-md-5 equal-height" id="formContent">
-      <h2 class="active">บันทึกรายรับ</h2>
-      <form (ngSubmit)="submitIncome()">
-        <div class="mb-3">
-          <label for="incomeAmount" class="form-label">จำนวนเงิน</label>
-          <input type="number" id="incomeAmount" class="form-control" [(ngModel)]="income.amount" name="incomeAmount" required>
-        </div>
-        <div class="mb-3">
-          <label for="incomeDescription" class="form-label">รายละเอียด</label>
-          <input type="text" id="incomeDescription" class="form-control" [(ngModel)]="income.description" name="incomeDescription" required>
-        </div>
-        <div class="mb-3">
-          <label for="incomeCategory" class="form-label">หมวดหมู่</label>
-          <select id="incomeCategory" class="form-select" [(ngModel)]="income.categoryId" name="incomeCategory" required>
-            <option *ngFor="let category of incomeCategories" [value]="category.CategoryId">{{ category.CategoryName }}</option>
-          </select>
+<div class="outer-wrapper">
+    <div class="wrapper">
+        <!-- ส่วนหัวของหน้า -->
+        <div class="header mt-4">
+            <h2>จัดการรายรับและรายจ่าย</h2>
         </div>
 
-        <!-- ยอดเงินคงเหลือ -->
-        <div class="balance-box text-center mb-4">
-          <h4>ยอดเงินคงเหลือ</h4>
-          <h3>{{ balance | number: '1.2-2' }} THB</h3>
+        <div class="row">
+            <!-- ฝั่งซ้าย: บันทึกรายรับ -->
+            <div class="col-md-5 save-item" id="formContent">
+                <h3 class="active">บันทึกรายรับ</h3>
+
+                <img src="https://cdn-icons-png.flaticon.com/128/817/817729.png" alt="">
+
+                <form (ngSubmit)="submitIncome()">
+                    <div class="mb-3">
+                        <label for="incomeAmount" class="form-label">จำนวนเงิน</label>
+                        <input type="number" id="incomeAmount" class="budget-input" [(ngModel)]="income.amount" name="incomeAmount" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="incomeDescription" class="form-label">รายละเอียด</label>
+                        <input type="text" id="incomeDescription" class="budget-input" [(ngModel)]="income.description" name="incomeDescription" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="incomeCategory" class="form-label">หมวดหมู่</label>
+                        <select id="incomeCategory" class="budget-input" [(ngModel)]="income.CategoryId" name="incomeCategory" required>
+                            <option *ngFor="let category of incomeCategories" [value]="category.CategoryId">{{ category.CategoryName }}</option>
+                        </select>
+                    </div>
+                    <!-- ยอดเงินคงเหลือ -->
+                    <div class="balance-box text-center mb-4">
+                        <h4>ยอดเงินคงเหลือ</h4>
+                        <h3>{{ balance | number: '1.2-2' }} ฿</h3>
+                    </div>
+                    <button type="submit" class="save-btn">บันทึกรายรับ</button>
+                </form>
+            </div>
+
+            <!-- ฝั่งขวา: บันทึกรายจ่าย -->
+            <div class="col-md-5 save-item" id="formContent">
+                <h3 class="active">บันทึกรายจ่าย</h3>
+                <img src="https://cdn-icons-png.flaticon.com/128/5501/5501371.png" alt="">
+
+                <form (ngSubmit)="submitExpense()">
+                    <div class="mb-3">
+                        <label for="expenseAmount" class="form-label">จำนวนเงิน</label>
+                        <input type="number" id="expenseAmount" class="budget-input" [(ngModel)]="expense.amount" name="expenseAmount" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="expenseDescription" class="form-label">รายละเอียด</label>
+                        <input type="text" id="expenseDescription" class="budget-input" [(ngModel)]="expense.description" name="expenseDescription" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="expenseCategory" class="form-label">หมวดหมู่</label>
+                        <select id="expenseCategory" class="budget-input" [(ngModel)]="expense.CategoryId" name="expenseCategory" required>
+                            <option *ngFor="let category of expenseCategories" [value]="category.CategoryId">{{ category.CategoryName }}</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="isRecurring" class="form-label">รายจ่ายประจำ</label>
+                        <input type="checkbox" id="isRecurring" [(ngModel)]="expense.isRecurring" name="isRecurring">
+                    </div>
+                    <!-- ยอดเงินคงเหลือ -->
+                    <div class="balance-box text-center mb-4">
+                        <h4>ยอดเงินคงเหลือ</h4>
+                        <h3>{{ balance | number: '1.2-2' }} ฿</h3>
+                    </div>
+                    <button type="submit" class="save-btn">บันทึกรายจ่าย</button>
+                </form>
+            </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">บันทึกรายรับ</button>
-      </form>
+        <!-- ตารางรายรับและรายจ่าย -->
+        <div class="transaction-list">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>รายการรายรับ</h5>
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>จำนวนเงิน</th>
+                                <th>รายละเอียด</th>
+                                <th>วันที่</th>
+                                <th>แก้ไข</th>
+                                <th>ลบ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let income of incomes">
+                                <td>{{ income.amount | number: '1.2-2' }} ฿</td>
+                                <td>{{ income.description }}</td>
+                                <td>{{ income.date | date: 'short' }}</td>
+                                <td><button class="btn btn-warning btn-sm" (click)="editIncome(income)">แก้ไข</button></td>
+                                <td><button class="btn btn-danger btn-sm" (click)="deleteIncome(income.incomeId)">ลบ</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <h5>รายการรายจ่าย</h5>
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>จำนวนเงิน</th>
+                                <th>รายละเอียด</th>
+                                <th>รายจ่ายประจำ</th>
+                                <th>วันที่</th>
+                                <th>แก้ไข</th>
+                                <th>ลบ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let expense of expenses">
+                                <td>{{ expense.amount | number: '1.2-2' }} ฿</td>
+                                <td>{{ expense.description }}</td>
+                                <td>{{ expense.isRecurring ? 'ใช่' : 'ไม่ใช่' }}</td>
+                                <td>{{ expense.date | date: 'short' }}</td>
+                                <td><button class="btn btn-warning btn-sm" (click)="editExpense(expense)">แก้ไข</button></td>
+                                <td><button class="btn btn-danger btn-sm" (click)="deleteExpense(expense.expenseId)">ลบ</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <!-- ฝั่งขวา: บันทึกรายจ่าย -->
-    <div class="col-md-5 equal-height" id="formContent">
-      <h2 class="active">บันทึกรายจ่าย</h2>
-      <form (ngSubmit)="submitExpense()">
-        <div class="mb-3">
-          <label for="expenseAmount" class="form-label">จำนวนเงิน</label>
-          <input type="number" id="expenseAmount" class="form-control" [(ngModel)]="expense.amount" name="expenseAmount" required>
-        </div>
-        <div class="mb-3">
-          <label for="expenseDescription" class="form-label">รายละเอียด</label>
-          <input type="text" id="expenseDescription" class="form-control" [(ngModel)]="expense.description" name="expenseDescription" required>
-        </div>
-        <div class="mb-3">
-          <label for="expenseCategory" class="form-label">หมวดหมู่</label>
-          <select id="expenseCategory" class="form-select" [(ngModel)]="expense.categoryId" name="expenseCategory" required>
-            <option *ngFor="let category of expenseCategories" [value]="category.CategoryId">{{ category.CategoryName }}</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="isRecurring" class="form-label">รายจ่ายประจำ</label>
-          <input type="checkbox" id="isRecurring" [(ngModel)]="expense.isRecurring" name="isRecurring">
-        </div>
-
-        <!-- ยอดเงินคงเหลือ -->
-        <div class="balance-box text-center mb-4">
-          <h4>ยอดเงินคงเหลือ</h4>
-          <h3>{{ balance | number: '1.2-2' }} THB</h3>
-        </div>  
-
-        <button type="submit" class="btn btn-primary">บันทึกรายจ่าย</button>
-      </form>
-    </div>
-  </div>
 </div>
- 
-
-<div class="container">
-  <div class="row">
-    <!-- Income Table -->
-    <div class="col-md-6">
-      <h5>รายการรายรับ</h5>
-      <table class="table table-bordered table-hover table-striped">
-        <thead class="thead-dark">
-          <tr>
-            <th>จำนวนเงิน</th>
-            <th>รายละเอียด</th>
-            <th>วันที่</th>
-            <th>แก้ไข</th>
-            <th>ลบ</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let income of incomes">
-            <td>{{ income.amount | number: '1.2-2' }} THB</td>
-            <td>{{ income.description }}</td>
-            <td>{{ income.date | date: 'short' }}</td>
-            <td><button class="btn btn-warning btn-sm" (click)="editIncome(income)">แก้ไข</button></td>
-            <td><button class="btn btn-danger btn-sm" (click)="deleteIncome(income.id)">ลบ</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Expense Table -->
-    <div class="col-md-6">
-      <h5>รายการรายจ่าย</h5>
-      <table class="table table-bordered table-hover table-striped">
-        <thead class="thead-dark">
-          <tr>
-            <th>จำนวนเงิน</th>
-            <th>รายละเอียด</th>
-            <th>รายจ่ายประจำ</th>
-            <th>วันที่</th>
-            <th>แก้ไข</th>
-            <th>ลบ</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let expense of expenses">
-            <td>{{ expense.amount | number: '1.2-2' }} THB</td>
-            <td>{{ expense.description }}</td>
-            <td>{{ expense.isRecurring ? 'ใช่' : 'ไม่ใช่' }}</td>
-            <td>{{ expense.date | date: 'short' }}</td>
-            <td><button class="btn btn-warning btn-sm" (click)="editExpense(expense)">แก้ไข</button></td>
-            <td><button class="btn btn-danger btn-sm" (click)="deleteExpense(expense.id)">ลบ</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-

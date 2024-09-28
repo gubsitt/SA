@@ -1,1 +1,49 @@
-<p>excel works!</p>
+<div class="outer-wrapper">
+  <div class="wrapper">
+      <div class="header">
+          <h2>ส่งออกเป็น Excel</h2>
+      </div>
+
+      <div class="filters">
+          <ul class="filter-list">
+              <li (click)="filterData('all')">
+                  <img src="https://cdn-icons-png.flaticon.com/128/3979/3979345.png" alt="ทั้งหมด">
+                  <span>ทั้งหมด</span>
+                  <i class="arrow-icon">></i>
+              </li>
+              <li (click)="filterData('this-month')">
+                  <img src="https://cdn-icons-png.flaticon.com/128/3979/3979345.png" alt="เดือนนี้">
+                  <span>เดือนนี้</span>
+                  <i class="arrow-icon">></i>
+              </li>
+              <li (click)="filterData('last-month')">
+                  <img src="https://cdn-icons-png.flaticon.com/128/3979/3979345.png" alt="เดือนที่แล้ว">
+<span>เดือนที่แล้ว</span>
+                  <i class="arrow-icon">></i>
+              </li>
+              <li (click)="filterData('this-year')">
+                  <img src="https://cdn-icons-png.flaticon.com/128/3979/3979345.png" alt="ปีนี้">
+                  <span>ปีนี้</span>
+                  <i class="arrow-icon">></i>
+              </li>
+              <li (click)="filterData('last-30-days')">
+                  <img src="https://cdn-icons-png.flaticon.com/128/3979/3979345.png" alt="ใน 30 วันที่ผ่านมา">
+                  <span>ใน 30 วันที่ผ่านมา</span>
+                  <i class="arrow-icon">></i>
+              </li>
+          </ul>
+      </div>
+
+      <div class="custom-date-filter">
+          <div class="date-picker">
+              <label for="start-date">เริ่ม</label>
+              <input type="date" id="start-date" [(ngModel)]="startDate">
+          </div>
+          <div class="date-picker">
+              <label for="end-date">จบ</label>
+              <input type="date" id="end-date" [(ngModel)]="endDate">
+          </div>
+          <button class="export-btn" (click)="applyCustomDateFilter()">ส่งออก</button>
+      </div>
+  </div>
+</div>

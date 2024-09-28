@@ -18,7 +18,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 180vh;
+      height: 110vh;
       background-color: #78dbff;
   }
   
@@ -105,11 +105,12 @@
       font-size: 18px;
       border-radius: 20px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.3s ease; /* เพิ่ม transition */
   }
   
   .save-btn:hover {
-      background-color: #0088cc;
+      background-color: #0088cc; /* เปลี่ยนสีพื้นหลังเมื่อชี้ */
+      transform: scale(1.05); /* ขยายขนาดปุ่มเล็กน้อย */
   }
   
   /* สมุดบัญชี */
@@ -134,4 +135,9 @@
       margin: 5px 0;
       font-size: 16px;
   }
-  
+
+  /* เพิ่มเอฟเฟกต์เมื่อเอาเมาส์ไปชี้ */
+  .category-item:hover {
+      transform: scale(1.05); /* ขยายขนาดเล็กน้อยเมื่อชี้ */
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* เพิ่มเงาลึกขึ้น */
+  }

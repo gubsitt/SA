@@ -9,18 +9,19 @@ import { BudgetComponent } from './budget/budget.component';
 import { AdditionalComponent } from './additional/additional.component';  
 import { CategoriesComponent } from './categories/categories.component';
 import { ExcelComponent } from './excel/excel.component';
+import { AuthGuard } from './guards/auth.guard'; // นำเข้า AuthGuard
 
 const routes: Routes = [ 
   { path: '', redirectTo: 'home', pathMatch: 'full' }, 
-  { path: 'home', component: HomeComponent },
-  { path: 'admin/login', component: LoginComponent },
+  { path: 'home', component: HomeComponent,canActivate: [AuthGuard]},
+  { path: 'login', component: LoginComponent },
   { path: 'admin/register', component: RegisterComponent },
-  { path: 'wallet', component: WalletComponent },
-  { path: 'analysis', component: AnalysisComponent },
-  { path: 'budget', component: BudgetComponent },
-  { path: 'additional', component: AdditionalComponent },
-  { path: 'categories', component: CategoriesComponent },
-  { path: 'excel', component: ExcelComponent }
+  { path: 'wallet', component: WalletComponent, canActivate: [AuthGuard] }, // เพิ่มการป้องกันด้วย Guard
+  { path: 'analysis', component: AnalysisComponent, canActivate: [AuthGuard] },
+  { path: 'budget', component: BudgetComponent, canActivate: [AuthGuard] },
+  { path: 'additional', component: AdditionalComponent, canActivate: [AuthGuard] },
+  { path: 'categories', component: CategoriesComponent, canActivate: [AuthGuard] },
+  { path: 'excel', component: ExcelComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({
