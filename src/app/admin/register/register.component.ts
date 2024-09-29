@@ -20,17 +20,17 @@ export class RegisterComponent {
       response => {
         Swal.fire({
           icon: 'success',
-          title: 'Registration successful',
-          text: 'You can now log in!'
+          title: 'ลงทะเบียนสำเร็จ',
+          text: 'คุณสามารถเข้าสู่ระบบได้แล้ว!'
         }).then(() => {
-          this.router.navigate(['/admin/login']); // นำทางไปยังหน้า login หลังจากลงทะเบียนสำเร็จ
+          this.router.navigate(['/login']); // นำทางไปยังหน้า login หลังจากลงทะเบียนสำเร็จ
         });
       },
       error => {
         Swal.fire({
           icon: 'error',
-          title: 'Registration failed',
-          text: 'Something went wrong, please try again'
+          title: 'ลงทะเบียนไม่สำเร็จ',
+          text: 'มีบางอย่างผิดพลาด, โปรดลองอีกครั้ง'
         });
       }
     );

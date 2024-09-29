@@ -1,0 +1,40 @@
+<div class="outer-wrapper">
+    <div class="inner-container">
+      <header class="header">
+        <div class="header-center">
+          <h1>การวิเคราะห์งบประมาณ</h1>
+        </div>
+      </header>
+  
+      <nav class="tabs">
+        <button class="tab" routerLink="/analysis" routerLinkActive="active">รายจ่าย</button>
+        <button class="tab" routerLink="/income-analysis" routerLinkActive="active">รายได้</button>
+        <button class="tab" routerLink="/budget-analysis" routerLinkActive="active">งบประมาณ</button>
+      </nav>
+  
+      <div class="content">
+        <section id="budget" class="section">
+          <div class="chart-container">
+            <canvas id="budgetChart" width="400" height="400"></canvas>
+          </div>  
+  
+          <div class="details-container mt-4">
+            <h3>รายละเอียดงบประมาณ</h3>
+            <!-- ลิสต์งบประมาณสำหรับแต่ละหมวดหมู่ -->
+            <div *ngFor="let detail of budgetDetails" class="detail-item">
+              <div class="icon">
+                <!-- เพิ่มรูปภาพที่นี่ -->
+                <img src="https://cdn-icons-png.flaticon.com/128/781/781760.png" alt="หมวดหมู่">
+              </div>
+              <div class="text">{{detail.name}}: ฿{{detail.amount}} ({{detail.percentage}}%)</div>
+              <div class="progress-bar">
+                <div class="progress" [style.width]="detail.percentage + '%'"></div>
+              </div>
+            </div>
+          </div>
+          
+        </section>
+      </div>
+    </div>
+  </div>
+  

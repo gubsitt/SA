@@ -24,4 +24,9 @@ export class BudgetService {
   saveBudgets(categories: any[]): Observable<any> {
     return this.http.post(`${this.apiUrl}/save-budgets`, { categories });
   }
+
+  // ฟังก์ชันดึงหมวดหมู่รายจ่ายพร้อมงบประมาณที่ตั้งไว้
+  getBudget(userId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/getbudget?userId=${userId}`);
+  }
 }

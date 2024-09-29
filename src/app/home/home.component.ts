@@ -306,7 +306,7 @@ editExpense(expense: Expense) {
 updateIncome() {
   this.incomeExpenseService.updateIncome(this.income).subscribe(
     (response: any) => {
-      Swal.fire('Success', 'Income updated successfully!', 'success');
+      Swal.fire('สำเร็จ', 'แก้ไขรายรับสำเร็จ!', 'success');
       this.loadIncomesAndExpenses(); // โหลดข้อมูลใหม่หลังจากอัปเดต
       this.income = { incomeId: 0, amount: 0, description: '', CategoryId: 0 }; // ล้างข้อมูลในฟอร์ม
       this.updateBalance();
@@ -324,7 +324,7 @@ updateExpense() {
 
   this.incomeExpenseService.updateExpense(this.expense).subscribe(
     (response: any) => {
-      Swal.fire('Success', 'Expense updated successfully!', 'success');
+      Swal.fire('สำเร็จ', 'แก้ไขรายจ่ายสำเร็จ!', 'success');
       this.loadIncomesAndExpenses(); // โหลดข้อมูลใหม่หลังจากอัปเดต
       this.expense = { expenseId: 0, amount: 0, description: '', isRecurring: false, CategoryId: 0 }; // ล้างข้อมูลในฟอร์ม
       this.updateBalance();

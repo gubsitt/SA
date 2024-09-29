@@ -145,4 +145,43 @@ router.get('/total-budget', async (req, res) => {
   }
 });
 
+// GET Budget route
+router.get('/getbudget', async (req, res) => {
+  const { userId } = req.query;
+
+  if (!userId) {
+    return res.status(400).json({ error: 'User ID is required' });
+  }
+
+  try {
+    const pool = await poolPromise;
+
+    const result = await pool.request()
+      .input('userId', sql.Int, userId)
+      .query(`
+        SELECT B.BudgetID, B.Amount, C.CategoryName, B.Frequency
+        FROM Budget B
+        JOIN ExpenseCategories C ON B.CategoryID = C.CategoryID  
+        WHERE B.UserID = @userId
+      `);
+
+    // ตรวจสอบว่ามีข้อมูลจากการ query หรือไม่
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'No budget found for this user.' });
+    }
+
+    // คำนวณ totalBudget
+    const totalBudget = result.recordset.reduce((sum, budget) => sum + budget.Amount, 0);
+
+    res.json({ 
+      budgets: result.recordset, 
+      totalBudget 
+    });
+  } catch (err) {
+    console.error('Error fetching budget:', err);
+    res.status(500).json({ error: 'Error fetching budget' });
+  }
+});
+
+
 module.exports = router;

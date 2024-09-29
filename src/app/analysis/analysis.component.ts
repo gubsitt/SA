@@ -1,40 +1,117 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';  // import isPlatformBrowser
-import { Chart, registerables } from 'chart.js';
+  import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+  import { isPlatformBrowser } from '@angular/common';  
+  import { Chart, registerables } from 'chart.js';
+  import { IncomeExpenseService } from '../service/income-expene.service'; 
 
-@Component({
-  selector: 'app-analysis',
-  templateUrl: './analysis.component.html',
-  styleUrls: ['./analysis.component.css']
-})
-export class AnalysisComponent implements OnInit {
+  @Component({
+    selector: 'app-analysis',
+    templateUrl: './analysis.component.html',
+    styleUrls: ['./analysis.component.css']
+  })
+  export class AnalysisComponent implements OnInit {
+    expenseDetails: any[] = [];  // เก็บข้อมูลรายละเอียดรายจ่าย
+    totalExpense: number = 0;    // เก็บยอดรายจ่ายรวม
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-    Chart.register(...registerables);
-  }
-
-  ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.renderChart();  // ตรวจสอบว่าอยู่ใน browser ก่อนเรียกใช้ document
+    constructor(
+      @Inject(PLATFORM_ID) private platformId: Object, 
+      private incomeExpenseService: IncomeExpenseService  // ใช้ service
+    ) {
+      Chart.register(...registerables);
     }
-  }
 
-  renderChart() {
-    const ctx = document.getElementById('myChart') as HTMLCanvasElement;
-    new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ['ที่อยู่อาศัย', 'การเดินทาง', 'อาหาร', 'ความบันเทิง'],
-        datasets: [{
-          label: 'ค่าใช้จ่าย',
-          data: [18500, 17500, 10000, 5000],
-          backgroundColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0']
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false
+    ngOnInit(): void {
+      if (isPlatformBrowser(this.platformId)) {
+        this.loadExpenseData();  // โหลดข้อมูลจาก backend
       }
-    });
+    }
+
+    loadExpenseData() {
+      const userId = sessionStorage.getItem('userId'); // เพิ่มการดึง userId จาก sessionStorage
+    
+      if (userId) {
+        // ดึงข้อมูลหมวดหมู่รายจ่ายจากฐานข้อมูล
+        this.incomeExpenseService.getExpenseCategories(parseInt(userId, 10)).subscribe(
+          (categories: any[]) => {
+            this.incomeExpenseService.getExpenses(parseInt(userId, 10)).subscribe(
+              (expenses: any) => {
+                this.processExpenseData(expenses.expenses, categories); // ส่งข้อมูลหมวดหมู่เข้าไปด้วย
+                this.renderChart();
+              },
+              (error) => {
+                console.error('Error fetching expenses:', error);
+              }
+            );
+          },
+          (error) => {
+            console.error('Error fetching expense categories:', error);
+          }
+        );
+      } else {
+        console.error('User ID is not available.');
+      }
+    }
+    
+  
+
+    processExpenseData(expenses: any[], categories: any[]) {
+      this.totalExpense = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+    
+      // สร้างออบเจ็กต์เพื่อรวมค่าใช้จ่ายแต่ละหมวดหมู่ รวม categoryId ด้วย
+      const categoryDetails = categories.map(category => ({
+        name: category.CategoryName,  // ใช้ชื่อหมวดหมู่จากฐานข้อมูล
+        icon: 'https://cdn-icons-png.flaticon.com/128/5501/5501371.png',  // คุณอาจใช้ไอคอนจากฐานข้อมูลหรือกำหนดเอง
+        categoryId: category.CategoryId,  // เพิ่ม categoryId ที่ดึงจากฐานข้อมูล
+        amount: 0
+      }));
+    
+      // รวมค่าใช้จ่ายแต่ละหมวดหมู่โดยใช้ categoryId
+      expenses.forEach(expense => {
+        const category = categoryDetails.find(cat => cat.categoryId === expense.CategoryId);
+        if (category) {
+          category.amount += expense.amount;
+        }
+      });
+    
+      // คำนวณเปอร์เซ็นต์
+      this.expenseDetails = categoryDetails.map(category => {
+        const percentage = ((category.amount / this.totalExpense) * 100).toFixed(2);
+        return {
+          ...category,  
+          percentage
+        };
+      });
+    }
+    
+    
+
+    renderChart() {
+      const ctx = document.getElementById('myChart') as HTMLCanvasElement;
+  
+      // ตรวจสอบว่า ctx มีค่าหรือไม่
+      if (!ctx) {
+        console.error('ไม่พบ canvas element!');
+        return;
+      }
+  
+      console.log('Chart data:', this.expenseDetails); // ดีบักข้อมูล
+      const chartData = this.expenseDetails.map(detail => detail.amount);
+      const chartLabels = this.expenseDetails.map(detail => detail.name);
+  
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: chartLabels,
+          datasets: [{
+            label: 'ค่าใช้จ่าย',
+            data: chartData,
+            backgroundColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff', '#ff9f40', '#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff', '#ff9f40'],
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
   }
-}
+  
+  }

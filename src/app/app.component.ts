@@ -9,6 +9,8 @@ import { AuthService } from './service/auth.service'; // นำเข้า Auth
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  title = 'My Angular App';  // เพิ่มคุณสมบัติ title ที่นี่
+
   showNavbar: boolean = true; // ตัวแปรสำหรับควบคุมการแสดง Navbar
 
   // Inject AuthService เข้ามาใน constructor เพื่อใช้งาน

@@ -10,6 +10,8 @@ import { AdditionalComponent } from './additional/additional.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { ExcelComponent } from './excel/excel.component';
 import { AuthGuard } from './guards/auth.guard'; // นำเข้า AuthGuard
+import { IncomeAnalysisComponent } from './income-analysis/income-analysis.component';
+import { BudgetAnalysisComponent } from './budget-analysis/budget-analysis.component';
 
 const routes: Routes = [ 
   { path: '', redirectTo: 'home', pathMatch: 'full' }, 
@@ -21,7 +23,9 @@ const routes: Routes = [
   { path: 'budget', component: BudgetComponent, canActivate: [AuthGuard] },
   { path: 'additional', component: AdditionalComponent, canActivate: [AuthGuard] },
   { path: 'categories', component: CategoriesComponent, canActivate: [AuthGuard] },
-  { path: 'excel', component: ExcelComponent, canActivate: [AuthGuard] }
+  { path: 'excel', component: ExcelComponent, canActivate: [AuthGuard] },
+  { path: 'income-analysis', component: IncomeAnalysisComponent, canActivate: [AuthGuard] },
+  { path: 'budget-analysis', component: BudgetAnalysisComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

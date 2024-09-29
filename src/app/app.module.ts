@@ -12,7 +12,9 @@ import { AnalysisComponent } from './analysis/analysis.component';
 import { BudgetComponent } from './budget/budget.component';
 import { AdditionalComponent } from './additional/additional.component';
 import { CategoriesComponent } from './categories/categories.component';
-import { ExcelComponent } from './excel/excel.component'; // Import FormsModule ที่นี่
+import { ExcelComponent } from './excel/excel.component';
+import { IncomeAnalysisComponent } from './income-analysis/income-analysis.component';
+import { BudgetAnalysisComponent } from './budget-analysis/budget-analysis.component'; // Import FormsModule ที่นี่
 
 
 
@@ -27,7 +29,9 @@ import { ExcelComponent } from './excel/excel.component'; // Import FormsModule 
     BudgetComponent,
     AdditionalComponent,
     CategoriesComponent,
-    ExcelComponent
+    ExcelComponent,
+    IncomeAnalysisComponent,
+    BudgetAnalysisComponent
   ],
   imports: [
     HttpClientModule,
