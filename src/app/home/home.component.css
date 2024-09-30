@@ -7,6 +7,9 @@
 html, body {
   font-family: Arial, sans-serif;
   height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,9 +20,10 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 140vh;
+  min-height: 100vh;
   width: 100%;
   background-color: #78dbff;  
+  padding: 20px;
 }
 
 .wrapper {
@@ -44,6 +48,7 @@ html, body {
 .row {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 h3, h5 {
@@ -54,33 +59,33 @@ h3, h5 {
 .table {
   width: 100%;
   margin-top: 20px;
-}
-
-table {
-  width: 100%;
-  margin-top: 15px;
   border-collapse: collapse;
 }
 
 th, td {
-  padding: 10px;
+  padding: 12px;
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
 
 th {
-  background-color: #abc9ec;
+  background-color: #00aeff;
+  color: white;
   font-weight: bold;
 }
 
+td {
+  background-color: #f9f9f9;
+}
+
 tbody tr:hover {
-  background-color: #f1f1f1;
-  cursor: pointer; /* เพิ่ม cursor pointer เมื่อชี้ที่แถว */
+  background-color: #e9e9e9;
+  cursor: pointer;
 }
 
 .save-item {
   background-color: #f9f9f9;
-  padding: 30px 20px; /* เพิ่ม padding ด้านบนและล่าง */
+  padding: 30px 20px;
   border-radius: 20px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -89,19 +94,21 @@ tbody tr:hover {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transition: transform 0.3s, box-shadow 0.3s; /* เพิ่ม transition */
+  transition: transform 0.3s, box-shadow 0.3s;
+  width: 100%;
+  max-width: 600px;
 }
 
 .save-item:hover {
-  transform: scale(1.01); /* ขยายขนาดเล็กน้อยเมื่อชี้ */
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* เพิ่มเงาลึกขึ้น */
+  transform: scale(1.01);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
 }
 
 .save-item img {
   width: 80px;
   height: 80px;
-  margin-top: 20px; /* เพิ่มช่องว่างด้านบน */
-  margin-bottom: 20px; /* เพิ่มช่องว่างด้านล่าง */
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .budget-input {
@@ -110,7 +117,7 @@ tbody tr:hover {
   font-size: 16px;
   border-radius: 10px;
   border: 1px solid #ddd;
-  margin-bottom: 20px; /* เพิ่มช่องว่างระหว่าง input กับปุ่ม */
+  margin-bottom: 20px;
 }
 
 .save-btn {
@@ -125,12 +132,12 @@ tbody tr:hover {
   max-width: 250px;
   margin: 20px auto;
   display: block;
-  transition: background-color 0.3s ease, transform 0.3s ease; /* เพิ่ม transition */
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .save-btn:hover {
   background-color: #0088cc;
-  transform: scale(1.05); /* ขยายขนาดเล็กน้อยเมื่อชี้ */
+  transform: scale(1.05);
 }
 
 .balance-box {
@@ -140,3 +147,63 @@ tbody tr:hover {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   margin-bottom: 20px;
 }
+
+.btn-edit {
+  background-color: #d8c623; /* สีเขียวสำหรับปุ่มแก้ไข */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-edit:hover {
+  background-color: #218838; /* เขียวเข้มขึ้นเมื่อชี้ */
+}
+
+.btn-delete {
+  background-color: #dc3545; /* สีแดงสำหรับปุ่มลบ */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-delete:hover {
+  background-color: #ee7c11; /* แดงเข้มขึ้นเมื่อชี้ */
+}
+
+
+@media screen and (max-width: 768px) {
+  .row {
+    flex-direction: column;
+  }
+
+  .save-item {
+    max-width: 100%;
+  }
+}
+
+/* สไตล์สำหรับตารางรายรับ */
+.income-table th {
+  background-color: #4CAF50; /* สีเขียวสำหรับหัวตารางรายรับ */
+}
+
+.income-table td {
+  background-color: #e7f7e7; /* สีเขียวอ่อนสำหรับข้อมูลในตารางรายรับ */
+}
+
+/* สไตล์สำหรับตารางรายจ่าย */
+.expense-table th {
+  background-color: #f44336; /* สีแดงสำหรับหัวตารางรายจ่าย */
+}
+
+.expense-table td {
+  background-color: #fdecea; /* สีแดงอ่อนสำหรับข้อมูลในตารางรายจ่าย */
+}
+

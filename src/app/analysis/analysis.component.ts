@@ -59,7 +59,7 @@
       // สร้างออบเจ็กต์เพื่อรวมค่าใช้จ่ายแต่ละหมวดหมู่ รวม categoryId ด้วย
       const categoryDetails = categories.map(category => ({
         name: category.CategoryName,  // ใช้ชื่อหมวดหมู่จากฐานข้อมูล
-        icon: 'https://cdn-icons-png.flaticon.com/128/5501/5501371.png',  // คุณอาจใช้ไอคอนจากฐานข้อมูลหรือกำหนดเอง
+        icon: 'https://cdn-icons-png.flaticon.com/512/1037/1037762.png',  // คุณอาจใช้ไอคอนจากฐานข้อมูลหรือกำหนดเอง
         categoryId: category.CategoryId,  // เพิ่ม categoryId ที่ดึงจากฐานข้อมูล
         amount: 0
       }));

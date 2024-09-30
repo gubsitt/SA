@@ -33,7 +33,7 @@ body, html {
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 1400px;
+    max-width: 800px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -52,74 +52,43 @@ body, html {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-.header h2 {
+.header h1 {
     font-size: 28px;
 }
 
-.category-list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 คอลัมน์ */
-    gap: 30px;
+/* สไตล์สำหรับแถบค้นหา */
+.search-bar {
     width: 100%;
-}
-
-.category-item {
-    background-color: #f9f9f9;
-    padding: 20px 40px;
-    border-radius: 20px;
-    text-align: center;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.3s, box-shadow 0.3s;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
-.category-item img {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 15px;
-}
-
-.category-item p {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-    margin: 10px 0;
-}
-
-.budget-input {
-    width: 100%;
+.search-bar input {
+    width: 80%;
     padding: 10px;
-    margin-top: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
     font-size: 16px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    text-align: center;
 }
 
-.save-budget {
-    margin-top: 30px;
-    text-align: center;
-}
-
-.save-btn {
+.search-bar button {
+    width: 18%;
     background-color: #00aeff;
     color: white;
     border: none;
-    padding: 15px 30px;
-    font-size: 18px;
-    border-radius: 20px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    transition: background-color 0.3s ease;
 }
 
-.save-btn:hover {
+.search-bar button:hover {
     background-color: #0088cc;
-    transform: scale(1.05);
 }
 
+/* สไตล์รายการธุรกรรม */
 .transaction-list {
     width: 100%;
     margin-top: 20px;
@@ -142,65 +111,43 @@ body, html {
     font-size: 16px;
 }
 
-.category-item:hover {
-    transform: scale(1.05);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+.transaction-type {
+    font-weight: bold;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
 }
 
-/* ปรับขนาดหน้าจอ */
+.transaction-type.income {
+    background-color: #4caf50;
+}
+
+.transaction-type.expense {
+    background-color: #ff6b6b;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
-    .category-list {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+    .search-bar {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-bar input, .search-bar button {
+        width: 100%;
+    }
+
+    .header h1 {
+        font-size: 24px;
     }
 
     .wrapper {
         padding: 20px;
     }
-
-    .header h2 {
-        font-size: 24px;
+    .transaction-icon img {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px; /* เพิ่มช่องว่างระหว่างรูปภาพกับข้อความ */
     }
-
-    .category-item {
-        padding: 15px 20px;
-    }
-
-    .category-item img {
-        width: 60px;
-        height: 60px;
-    }
-
-    .budget-input {
-        font-size: 14px;
-    }
-
-    .save-btn {
-        padding: 10px 20px;
-        font-size: 16px;
-    }
-}
-
-@media (max-width: 480px) {
-    .category-list {
-        grid-template-columns: repeat(1, 1fr);
-    }
-
-    .category-item {
-        padding: 10px;
-    }
-
-    .category-item img {
-        width: 50px;
-        height: 50px;
-    }
-
-    .budget-input {
-        font-size: 12px;
-    }
-
-    .save-btn {
-        padding: 8px 15px;
-        font-size: 14px;
-    }
+    
 }

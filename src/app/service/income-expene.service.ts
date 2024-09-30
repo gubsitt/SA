@@ -69,6 +69,9 @@ export class IncomeExpenseService {
     return this.http.get(`${this.apiUrl}/check-recurring-expense?userId=${userId}`);
   }
   
-  
+    // ฟังก์ชันค้นหารายการรายรับและรายจ่าย
+    searchTransactions(query: string, userId: number): Observable<any> {
+      return this.http.get(`${this.apiUrl}/search`, { params: { query, userId: userId.toString() } });
+    }
   
 }

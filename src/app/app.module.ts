@@ -14,7 +14,8 @@ import { AdditionalComponent } from './additional/additional.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { ExcelComponent } from './excel/excel.component';
 import { IncomeAnalysisComponent } from './income-analysis/income-analysis.component';
-import { BudgetAnalysisComponent } from './budget-analysis/budget-analysis.component'; // Import FormsModule ที่นี่
+import { BudgetAnalysisComponent } from './budget-analysis/budget-analysis.component';
+import { SearchComponent } from './search/search.component'; // Import FormsModule ที่นี่
 
 
 
@@ -31,7 +32,8 @@ import { BudgetAnalysisComponent } from './budget-analysis/budget-analysis.compo
     CategoriesComponent,
     ExcelComponent,
     IncomeAnalysisComponent,
-    BudgetAnalysisComponent
+    BudgetAnalysisComponent,
+    SearchComponent
   ],
   imports: [
     HttpClientModule,

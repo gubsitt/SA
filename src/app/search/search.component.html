@@ -1,0 +1,73 @@
+<div class="outer-wrapper">
+    <div class="wrapper">
+        <header class="header">
+            <h1>ค้นหารายการรายรับและรายจ่าย</h1>
+        </header>
+
+        <div class="search-bar">
+            <input type="text" [(ngModel)]="query" placeholder="ค้นหารายการ...">
+            <button (click)="searchTransactions()">ค้นหา</button>
+        </div>
+
+        <!-- ตรวจสอบว่ามีรายการธุรกรรมหรือไม่ -->
+        <div class="transaction-list">
+            <div *ngIf="transactions.length > 0">
+                <div *ngFor="let transaction of transactions" class="transaction-item">
+                    <!-- เพิ่มรูปภาพขึ้นอยู่กับประเภทของรายการ -->
+                    <div class="transaction-icon">
+                        <img *ngIf="transaction.type === 'expense'" src="https://cdn-icons-png.flaticon.com/512/1037/1037762.png" alt="Expense Icon">
+                        <img *ngIf="transaction.type === 'income'" src="https://cdn-icons-png.flaticon.com/128/817/817729.png" alt="Income Icon">
+                    </div>
+
+                    <div class="transaction-details">
+                        <h3>{{ transaction.type === 'income' ? 'รายรับ' : 'รายจ่าย' }}: ฿{{ transaction.amount }}</h3>
+                        <p>{{ transaction.description }}</p>
+                        <p>{{ transaction.date | date: 'short' }}</p>
+                    </div>
+                    <div class="transaction-type" [ngClass]="transaction.type === 'income' ? 'income' : 'expense'">
+                        {{ transaction.type === 'income' ? 'รับ' : 'จ่าย' }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- แสดงข้อความถ้าไม่มีธุรกรรมหลังจากกดค้นหา -->
+            <div *ngIf="transactions.length === 0 && isSearchClicked">
+                <p>ไม่พบข้อมูลที่ตรงกับ "{{ query }}"</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.transaction-icon img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px; /* เพิ่มช่องว่างระหว่างรูปภาพกับข้อความ */
+}
+
+.transaction-item {
+    display: flex;
+    align-items: center; /* จัดตำแหน่งรูปภาพและข้อความให้เรียงกันในแนวนอน */
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.transaction-details {
+    flex-grow: 1;
+}
+
+.transaction-type {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    color: white;
+}
+
+.transaction-type.income {
+    background-color: #4caf50;
+}
+
+.transaction-type.expense {
+    background-color: #ff6b6b;
+}
+</style>

@@ -9,6 +9,7 @@ body, html {
     font-family: Arial, sans-serif;
     height: 100%;
     margin: 0;
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,8 +20,10 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 130vh;
+    min-height: 100vh;
+    width: 100%;
     background-color: #78dbff;
+    padding: 20px;
 }
 
 .wrapper {
@@ -29,7 +32,7 @@ body, html {
     border: 2px solid #cccccc;
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    width: 90%;
+    width: 100%;
     max-width: 1400px;
     display: flex;
     flex-direction: column;
@@ -57,7 +60,7 @@ body, html {
 /* กล่องหมวดหมู่ */
 .category-list {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5 คอลัมน์ */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* ปรับขนาดอัตโนมัติ */
     gap: 30px;
     justify-items: center;
     width: 100%;
@@ -65,7 +68,7 @@ body, html {
 
 .category-item {
     background-color: #f9f9f9;
-    padding: 20px 80px;
+    padding: 20px;
     border-radius: 20px;
     text-align: center;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
@@ -75,6 +78,8 @@ body, html {
     justify-content: center;
     align-items: center;
     border: 1px solid #ddd;
+    width: 100%;
+    max-width: 200px; /* จำกัดขนาดสูงสุดของหมวดหมู่ */
 }
 
 .category-item:hover {
@@ -120,6 +125,7 @@ body, html {
     justify-content: space-between;
     width: 100%;
     margin-top: 40px;
+    flex-direction: row; /* เปลี่ยนเป็นแถว */
 }
 
 .add-category {
@@ -128,7 +134,7 @@ body, html {
     border-radius: 20px;
     text-align: center;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    width: 45%;
+    width: 48%; /* กำหนดความกว้างให้สมดุล */
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
@@ -147,12 +153,12 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 10px;
 }
 
 input[type="text"] {
     width: 70%;
     padding: 10px;
-    margin-right: 10px;
     font-size: 16px;
     border-radius: 10px;
     border: 1px solid #ddd;
@@ -172,4 +178,57 @@ input[type="text"] {
 
 .add-category button:hover {
     background-color: #0088cc;
+}
+
+.input-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+input[type="text"] {
+    width: 70%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.add-category button {
+    background-color: #00aeff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-category button:hover {
+    background-color: #0088cc;
+}
+
+/* สำหรับหน้าจอขนาดเล็ก */
+@media screen and (max-width: 768px) {
+    .category-list {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* ปรับขนาดเล็กลง */
+    }
+
+    .category-item {
+        padding: 10px;
+        max-width: 150px;
+    }
+    
+    .add-category-container {
+        flex-direction: column;
+    }
+
+    .add-category {
+        width: 100%;
+    }
+
+    
 }

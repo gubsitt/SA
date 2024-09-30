@@ -1,5 +1,30 @@
-import { Component, OnInit } from '@angular/core';
-import { Chart } from 'chart.js/auto';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Chart, registerables } from 'chart.js';
+import { IncomeExpenseService } from '../service/income-expene.service';  // ใช้ Service ที่คุณส่งมา
+
+// สร้าง interface ภายในไฟล์นี้เลย
+interface Income {
+  incomeId: number;
+  amount: number;
+  description: string;
+  categoryId: number;
+  userId: number;
+}
+
+interface Expense {
+  expenseId: number;
+  amount: number;
+  description: string;
+  categoryId: number;
+  userId: number;
+}
+
+interface Transaction {
+  type: 'income' | 'expense';  // ระบุชนิดของ transaction
+  description: string;
+  amount: number;
+}
 
 @Component({
   selector: 'app-wallet',
@@ -7,35 +32,95 @@ import { Chart } from 'chart.js/auto';
   styleUrls: ['./wallet.component.css']
 })
 export class WalletComponent implements OnInit {
+  totalBalance: number = 0;     // ยอดคงเหลือ
+  totalIncome: number = 0;      // รายได้ทั้งหมด
+  totalExpense: number = 0;     // รายจ่ายทั้งหมด
+  transactions: Transaction[] = [];  // เก็บข้อมูล transaction ทั้งรายรับและรายจ่าย
 
-  constructor() { }
-
-  ngOnInit(): void {
-    this.renderChart();  // เรียกใช้งานกราฟเมื่อ component โหลดเสร็จ
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private incomeExpenseService: IncomeExpenseService  // ใช้ service ที่คุณให้มา
+  ) {
+    Chart.register(...registerables);
   }
 
-  renderChart() {
-    const ctx = document.getElementById('expenseChart') as HTMLCanvasElement;
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadWalletData();  // โหลดข้อมูลจาก backend
+    }
+  }
+
+  loadWalletData() {
+    const userId = sessionStorage.getItem('userId');
+    if (userId) {
+      // ดึงรายได้และรายจ่ายจาก service
+      this.incomeExpenseService.getIncomes(parseInt(userId, 10)).subscribe(
+        (incomeData: { incomes: Income[] }) => {
+          this.totalIncome = this.calculateTotal(incomeData.incomes);
+          this.addTransactions(incomeData.incomes, 'income');  // เพิ่ม transaction ของรายรับ
+
+          this.incomeExpenseService.getExpenses(parseInt(userId, 10)).subscribe(
+            (expenseData: { expenses: Expense[] }) => {
+              this.totalExpense = this.calculateTotal(expenseData.expenses);
+              this.addTransactions(expenseData.expenses, 'expense');  // เพิ่ม transaction ของรายจ่าย
+
+              this.calculateTotalBalance();  // คำนวณยอดคงเหลือ
+              this.renderFinanceChart();  // เรนเดอร์แผนภูมิการเงิน
+            },
+            (error) => {
+              console.error('Error fetching expenses:', error);
+            }
+          );
+        },
+        (error) => {
+          console.error('Error fetching incomes:', error);  
+        }
+      );
+    }
+  }
+
+  calculateTotal(items: { amount: number }[]): number {
+    return items.reduce((sum, item) => sum + item.amount, 0);
+  }
+
+  calculateTotalBalance() {
+    this.totalBalance = this.totalIncome - this.totalExpense;
+  }
+
+  addTransactions(items: any[], type: 'income' | 'expense') {
+    const transactions = items.map(item => ({
+      type,
+      description: item.description,
+      amount: item.amount
+    }));
+    this.transactions.push(...transactions);
+  }
+
+  renderFinanceChart() {
+    const ctx = document.getElementById('financeChart') as HTMLCanvasElement;
+    if (!ctx) {
+      console.error('ไม่พบ canvas element!');
+      return;
+    }
+
+    const chartData = [this.totalIncome, this.totalExpense];
+    const chartLabels = ['รายได้', 'รายจ่าย'];
+
     new Chart(ctx, {
-      type: 'bar',  // กำหนดประเภทของกราฟ (เช่น bar, line, pie)
+      type: 'pie',
       data: {
-        labels: ['ค่าอาหาร', 'ค่าเดินทาง', 'ค่าที่พัก', 'ค่าอื่นๆ'],  // ป้ายชื่อของแกน X
+        labels: chartLabels,
         datasets: [{
-          label: 'ยอดใช้จ่าย (บาท)',
-          data: [5000, 3000, 7000, 2000],  // ข้อมูลการใช้จ่ายในแต่ละหมวด
-          backgroundColor: ['#ff6b6b', '#4caf50', '#ffa726', '#42a5f5'],
-          borderColor: ['#ff6b6b', '#4caf50', '#ffa726', '#42a5f5'],
-          borderWidth: 1
+          label: 'แผนภูมิการเงิน',
+          data: chartData,
+          backgroundColor: ['#36A2EB', '#FF6384'],
         }]
       },
       options: {
         responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true  // เริ่มต้นแกน Y ที่ค่า 0
-          }
-        }
+        maintainAspectRatio: true
       }
     });
   }
 }
+  

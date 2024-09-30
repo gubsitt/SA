@@ -12,6 +12,7 @@ const userRoutes = require('./routes/Users');
 const balanceRoutes = require('./routes/ฺBalance'); // เพิ่มเส้นทางสำหรับ Balance
 const incomeCategories = require('./routes/incomeCategories');
 const expenseCategories = require('./routes/expenseCategories');
+const searchRoutes = require('./routes/search');
 const budget = require('./routes/budget');
 
 // เปิดการใช้งาน CORS
@@ -28,6 +29,7 @@ app.use('/api', balanceRoutes); // เพิ่มเส้นทางสำห
 app.use('/api', incomeCategories);
 app.use('/api', expenseCategories);
 app.use('/api', budget);
+app.use('/api', searchRoutes);
 
 // เริ่มเซิร์ฟเวอร์
 app.listen(port, () => {
