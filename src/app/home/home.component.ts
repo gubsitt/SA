@@ -57,8 +57,7 @@ export class HomeComponent implements OnInit {
     this.loadCategories();
     this.loadBalance();
     this.loadIncomesAndExpenses();
-    this.loadTotalBudget();
-    
+    this.loadExpenseCategoriesAndBalance();    
     console.log("Incomes:", this.incomes);
     console.log("Expenses:", this.expenses);
      
@@ -117,25 +116,37 @@ export class HomeComponent implements OnInit {
       }
     );
   }
-    // โหลดงบประมาณรวมจาก BudgetService
-    loadTotalBudget() {
-      if (this.userId) {
-        this.budgetService.getTotalBudget(this.userId).subscribe(
-          (response) => {
-            this.totalBudget = response.totalBudget;
+  // ฟังก์ชันโหลดหมวดหมู่รายจ่ายพร้อมยอดคงเหลือและงบประมาณรวมจาก backend
+  loadExpenseCategoriesAndBalance(): void {
+    if (this.userId) {
+      this.budgetService.getExpenseCategories(this.userId).subscribe(
+        (data) => {
+          // ดึงข้อมูลจาก API และแมปเป็น expenseCategories
+          this.expenseCategories = data.budgets.map((category: any) => ({
+            CategoryId: category.CategoryId,
+            CategoryName: category.CategoryName,
+            budget: category.Budget || 0 // ใช้ Budget ที่ได้จาก Backend
+          }));
   
-            // ตรวจสอบว่าหากยอดคงเหลือน้อยกว่างบประมาณรวม
-            if (this.balance < this.totalBudget) {
-              Swal.fire('คำเตือน', 'ยอดเงินคงเหลือของคุณน้อยกว่างบประมาณที่ตั้งไว้', 'warning');
-            }
-          },
-          (error) => {
-            console.error('Error loading total budget:', error);
+          // ตรวจสอบข้อมูลที่ถูกดึงมา
+          console.log('Categories:', this.expenseCategories);
+  
+          // ดึงข้อมูล balance และ totalBudget จาก API
+          this.balance = data.balance;
+          this.totalBudget = data.totalBudget;
+  
+          // เช็คว่ายอดคงเหลือต่ำกว่างบประมาณรวมหรือไม่
+          if (data.isBelowBudget) {
+            Swal.fire('คำเตือน', 'ยอดเงินคงเหลือของคุณต่ำกว่างบประมาณที่ตั้งไว้', 'warning');
           }
-        );
-      }
-    }   
-  
+        },
+        (error) => {
+          console.error('Error loading expense categories or balance', error);
+          Swal.fire('ข้อผิดพลาด', 'ไม่สามารถโหลดหมวดหมู่หรือยอดคงเหลือได้', 'error');
+        }
+      );
+    }
+  }
 
   loadIncomesAndExpenses() {
     if (this.userId > 0) {

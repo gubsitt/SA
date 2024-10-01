@@ -27,6 +27,7 @@ export class BudgetService {
 
   // ฟังก์ชันดึงหมวดหมู่รายจ่ายพร้อมงบประมาณที่ตั้งไว้
   getBudget(userId: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/getbudget?userId=${userId}`);
+    return this.http.get(`${this.apiUrl}/getbudget?userId=${userId}`);
   }
+  
 }

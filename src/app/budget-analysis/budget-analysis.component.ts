@@ -10,7 +10,8 @@ import { BudgetService } from '../service/budget.service';  // ดึงข้�
 })
 export class BudgetAnalysisComponent implements OnInit {
   budgetDetails: any[] = [];  // เก็บข้อมูลรายละเอียดงบประมาณ
-  totalBudget: number = 0;    // เก็บงบประมาณรวม
+  remainingBudgetTotal: number = 0;  // เก็บงบประมาณรวมที่เหลือทั้งหมด
+  daysInMonth: number = this.getDaysInCurrentMonth();  // จำนวนวันในเดือนปัจจุบัน
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -25,14 +26,15 @@ export class BudgetAnalysisComponent implements OnInit {
     }
   }
 
+  // โหลดข้อมูลจาก API
   loadBudgetData() {
     const userId = sessionStorage.getItem('userId');
     if (userId) {
       this.budgetService.getBudget(parseInt(userId, 10)).subscribe(
         (data: any) => {
           console.log('Data from API:', data);  // ตรวจสอบข้อมูลที่ได้รับจาก API
-          this.processBudgetData(data.budgets, data.totalBudget);  // ใช้ข้อมูลจาก API ที่ดึงหมวดหมู่และ totalBudget
-          this.renderChart(); // เรนเดอร์กราฟหลังจากประมวลผลข้อมูล
+          this.processBudgetData(data.budgets);  // ใช้ข้อมูลจาก API ที่ดึงหมวดหมู่
+          this.renderChart();  // เรนเดอร์กราฟหลังจากประมวลผลข้อมูล
         },
         (error) => {
           console.error('Error fetching budget:', error);
@@ -40,31 +42,53 @@ export class BudgetAnalysisComponent implements OnInit {
       );
     }
   }
-  
 
-  processBudgetData(budgets: any[], totalBudget: number) {
-    console.log('Budgets:', budgets);
-    console.log('Total Budget:', totalBudget);
+  // ฟังก์ชันคำนวณจำนวนวันในเดือนปัจจุบัน
+  getDaysInCurrentMonth(): number {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  }
+
+  // ฟังก์ชันคำนวณจำนวนวันที่เหลือในเดือนปัจจุบัน
+  getDaysRemaining(): number {
+    const today = new Date();
+    return this.daysInMonth - today.getDate(); // จำนวนวันที่เหลือในเดือนนี้
+  }
+
+  // ประมวลผลข้อมูลงบประมาณและคำนวณเปอร์เซ็นต์
+  processBudgetData(budgets: any[]) {
+    const daysRemaining = this.getDaysRemaining();  // จำนวนวันที่เหลือในเดือน
   
-    // ตรวจสอบว่ามี totalBudget หรือไม่ หากไม่มีให้ตั้งค่าเป็น 1 เพื่อป้องกันการหารด้วย 0
-    this.totalBudget = totalBudget || 1;
+    // คำนวณงบประมาณที่ควรเหลือรวมทั้งหมด
+    this.remainingBudgetTotal = budgets.reduce((sum, budget) => {
+      const dailyBudget = budget.Budget;  // งบประมาณที่ตั้งไว้ต่อวัน
+      const remainingBudget = dailyBudget * daysRemaining;  // คำนวณงบประมาณที่ควรเหลือ
+      return sum + remainingBudget;
+    }, 0);
   
-    // ประมวลผลหมวดหมู่เพื่อคำนวณสัดส่วนงบประมาณ
+    console.log('Remaining Budget Total:', this.remainingBudgetTotal);  // ตรวจสอบค่า remainingBudgetTotal
+  
+    // ประมวลผลงบประมาณสำหรับแต่ละหมวดหมู่
     this.budgetDetails = budgets.map(budget => {
-      const amount = budget.Amount || 0;  // ตรวจสอบว่า Amount มีอยู่
-      const percentage = totalBudget > 0 ? ((amount / totalBudget) * 100).toFixed(2) : '0';  // คำนวณเปอร์เซ็นต์
+      const dailyBudget = budget.Budget;  // งบประมาณที่ตั้งไว้สำหรับแต่ละวัน
+      const remainingBudget = dailyBudget * daysRemaining;  // คำนวณงบประมาณที่ควรมีในวันที่เหลือ
   
-      console.log(`Category: ${budget.CategoryName}, Amount: ${amount}, Percentage: ${percentage}`);
+      // คำนวณเปอร์เซ็นต์ของหมวดหมู่โดยเปรียบเทียบกับ remainingBudgetTotal
+      const percentage = this.remainingBudgetTotal > 0 
+        ? (remainingBudget / this.remainingBudgetTotal) * 100 
+        : 0;
+  
+      console.log(`Category: ${budget.CategoryName}, Daily Budget: ${dailyBudget}, Remaining Budget: ${remainingBudget}, Percentage: ${percentage}`);
   
       return {
         name: budget.CategoryName,  // ชื่อหมวดหมู่
-        amount,
-        percentage
+        remainingBudget,  // งบประมาณที่ควรเหลือ
+        percentage: percentage.toFixed(2)  // คำนวณเปอร์เซ็นต์และแปลงเป็นทศนิยม 2 ตำแหน่ง
       };
     });
   }
-  
 
+  // ฟังก์ชันเรนเดอร์กราฟโดยใช้ข้อมูลจาก budgetDetails
   renderChart() {
     const ctx = document.getElementById('budgetChart') as HTMLCanvasElement;
 
@@ -73,7 +97,7 @@ export class BudgetAnalysisComponent implements OnInit {
       return;
     }
 
-    const chartData = this.budgetDetails.map(detail => detail.amount);
+    const chartData = this.budgetDetails.map(detail => detail.remainingBudget);  // ใช้ข้อมูลงบประมาณที่ควรมีในวันที่เหลือ
     const chartLabels = this.budgetDetails.map(detail => detail.name);
 
     new Chart(ctx, {
@@ -81,7 +105,7 @@ export class BudgetAnalysisComponent implements OnInit {
       data: {
         labels: chartLabels,
         datasets: [{
-          label: 'งบประมาณ',
+          label: 'งบประมาณที่ควรเหลือในวันที่เหลือ',
           data: chartData,
           backgroundColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff', '#ff9f40', '#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff', '#ff9f40'],
         }]
@@ -92,5 +116,4 @@ export class BudgetAnalysisComponent implements OnInit {
       }
     });
   }
-
 }

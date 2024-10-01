@@ -1,42 +1,41 @@
 import { Component } from '@angular/core';
-import * as XLSX from 'xlsx';
+import { ExportService } from '../service/export.service';  // นำเข้า ExportService
 
 @Component({
-  selector: 'app-excel',
+  selector: 'app-excel-component',
   templateUrl: './excel.component.html',
   styleUrls: ['./excel.component.css']
 })
-export class ExcelComponent{
-  startDate: string = '';
-  endDate: string = '';
+export class ExcelComponent {
+  userId: number | null = null; // กำหนดเป็น null เพื่อรองรับการดึงจาก session
+  startDate: string | null = null; // วันที่เริ่มต้นที่ผู้ใช้เลือก
+  endDate: string | null = null; // วันที่สิ้นสุดที่ผู้ใช้เลือก
 
-  filterData(filterType: string) {
-    // Logic การกรองข้อมูลตาม filterType
-    console.log('Selected Filter: ', filterType);
-  }
+  constructor(private exportService: ExportService) {}
 
-  applyCustomDateFilter() {
-    // ตรวจสอบว่ามีการกรอกวันที่เริ่มต้นและสิ้นสุดแล้ว
-    if (this.startDate && this.endDate) {
-      console.log('Exporting data from', this.startDate, 'to', this.endDate);
-      // Logic การกรองข้อมูลตามวันที่เริ่มและจบ
-    } else {
-      alert('กรุณาเลือกวันที่');
+  ngOnInit(): void {
+    // ดึง userId จาก sessionStorage
+    const storedUserId = sessionStorage.getItem('userId');
+    if (storedUserId) {
+      this.userId = parseInt(storedUserId, 10);
     }
   }
 
-  exportToExcel() {
-    // ตัวอย่างข้อมูลที่ส่งออก
-    const data = [
-      { Category: 'อาหาร', Amount: 2000, Date: '2024-09-01' },
-      { Category: 'จราจร', Amount: 1500, Date: '2024-09-02' }
-    ];
+  // ฟังก์ชันตรวจสอบและส่งออกข้อมูลรายรับ
+  exportIncome(): void {
+    if (this.startDate && this.endDate && this.userId) {
+      this.exportService.exportTransactions(this.userId, this.startDate, this.endDate, 'income');
+    } else {
+      alert('กรุณาเลือกวันที่เริ่มต้นและวันที่สิ้นสุดก่อนส่งออกข้อมูล');
+    }
+  }
 
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Data');
-
-    XLSX.writeFile(wb, 'data.xlsx');
+  // ฟังก์ชันตรวจสอบและส่งออกข้อมูลรายจ่าย
+  exportExpense(): void {
+    if (this.startDate && this.endDate && this.userId) {
+      this.exportService.exportTransactions(this.userId, this.startDate, this.endDate, 'expense');
+    } else {
+      alert('กรุณาเลือกวันที่เริ่มต้นและวันที่สิ้นสุดก่อนส่งออกข้อมูล');
+    }
   }
 }
-

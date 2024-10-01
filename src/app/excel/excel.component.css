@@ -1,105 +1,104 @@
 .outer-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #78dbff; 
-    height: 100vh;
-    padding: 30px;
-  }
-  
-  .wrapper {
-    background-color: #fff;
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 600px; /* ปรับขนาดให้ใหญ่ขึ้น */
-  }
-  
-  .header {
-    text-align: center;
-    background-color: #4da6ff; /* เปลี่ยนสี */
-    color: white;
-    padding: 20px;
-    border-radius: 15px;
-    margin-bottom: 30px;
-  }
-  
-  .header h2 {
-    margin: 0;
-    font-size: 24px; /* ปรับขนาดฟอนต์ */
-  }
-  
-  .filters {
-    margin-bottom: 30px;
-  }
-  
-  .filter-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .filter-list li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 15px;
-    border: 1px solid #4da6ff; 
-    border-radius: 10px;
-    margin-bottom: 15px;
-    cursor: pointer;
-  }
-  
-  .filter-list li img {
-    width: 40px; /* ขยายขนาดรูป */
-    height: 40px;
-  }
-  
-  .filter-list li span {
-    flex-grow: 1;
-    margin-left: 15px;
-    font-size: 18px; /* ขยายฟอนต์ */
-    color: #333;
-  }
-  
-  .arrow-icon {
-    color: #4da6ff; /* เปลี่ยนสีลูกศร */
-  }
-  
-  .custom-date-filter {
-    background-color: #e6f3ff; /* สีพื้นหลังของฟอร์ม */
-    padding: 20px;
-    border-radius: 15px;
-    text-align: center;
-    margin-top: 20px;
-    border: 1px solid #4da6ff; /* เปลี่ยนสีขอบ */
-  }
-  
-  .date-picker {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .date-picker label {
-    margin-right: 10px;
-    font-weight: bold;
-  }
-  
-  .export-btn {
-    background-color: #4da6ff; /* เปลี่ยนสีปุ่ม */
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 10px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 18px; /* ขยายฟอนต์ */
-    margin-top: 15px;
-  }
-  
-  .export-btn:hover {
-    background-color: #3399ff; /* เปลี่ยนสีเมื่อ hover */
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #78dbff; 
+  height: 100vh;
+  padding: 30px;
+}
+
+.wrapper {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px; /* ปรับขนาดให้ใหญ่ขึ้น */
+}
+
+.header {
+  text-align: center;
+  background-color: #4da6ff; /* เปลี่ยนสี */
+  color: white;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 24px; /* ปรับขนาดฟอนต์ */
+}
+
+.filters {
+  margin-bottom: 30px;
+}
+
+.filter-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.filter-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  border: 1px solid #4da6ff; 
+  border-radius: 10px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.filter-list li img {
+  width: 40px; /* ขยายขนาดรูป */
+  height: 40px;
+}
+
+.filter-list li span {
+  flex-grow: 1;
+  margin-left: 15px;
+  font-size: 18px; /* ขยายฟอนต์ */
+  color: #333;
+}
+
+.arrow-icon {
+  color: #4da6ff; /* เปลี่ยนสีลูกศร */
+}
+
+.custom-date-filter {
+  background-color: #e6f3ff; /* สีพื้นหลังของฟอร์ม */
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  margin-top: 20px;
+  border: 1px solid #4da6ff; /* เปลี่ยนสีขอบ */
+}
+
+.date-picker {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.date-picker label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.export-btn {
+  background-color: #4da6ff; /* เปลี่ยนสีปุ่ม */
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px; /* ขยายฟอนต์ */
+  margin-top: 15px;
+}
+
+.export-btn:hover {
+  background-color: #3399ff; /* เปลี่ยนสีเมื่อ hover */
+}

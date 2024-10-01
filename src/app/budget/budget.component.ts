@@ -6,8 +6,7 @@ import Swal from 'sweetalert2';
 interface ExpenseCategory {
   CategoryId: number;
   CategoryName: string;
-  Budget: number;
-  budget?: number; // งบประมาณที่ผู้ใช้กรอก (อาจเป็น undefined)
+  budget?: number; // งบประมาณรายวันที่ผู้ใช้กรอก
 }
 
 @Component({
@@ -32,6 +31,7 @@ export class BudgetComponent implements OnInit {
     } else {
       Swal.fire('ข้อผิดพลาด', 'ผู้ใช้ไม่ได้เข้าสู่ระบบ', 'error');
     }
+    
   }
 
   // ฟังก์ชันโหลดหมวดหมู่รายจ่ายพร้อมยอดคงเหลือและงบประมาณรวมจาก backend
@@ -39,13 +39,20 @@ export class BudgetComponent implements OnInit {
     if (this.userId) {
       this.budgetService.getExpenseCategories(this.userId).subscribe(
         (data) => {
+          // ดึงข้อมูลจาก API และแมปเป็น expenseCategories
           this.expenseCategories = data.budgets.map((category: any) => ({
-            ...category,
-            budget: category.Budget // กำหนดงบประมาณเริ่มต้นจากฐานข้อมูล
+            CategoryId: category.CategoryId,
+            CategoryName: category.CategoryName,
+            budget: category.Budget || 0 // ใช้ Budget ที่ได้จาก Backend
           }));
+  
+          // ตรวจสอบข้อมูลที่ถูกดึงมา
+          console.log('Categories:', this.expenseCategories);
+  
+          // ดึงข้อมูล balance และ totalBudget จาก API
           this.balance = data.balance;
           this.totalBudget = data.totalBudget;
-
+  
           // เช็คว่ายอดคงเหลือต่ำกว่างบประมาณรวมหรือไม่
           if (data.isBelowBudget) {
             Swal.fire('คำเตือน', 'ยอดเงินคงเหลือของคุณต่ำกว่างบประมาณที่ตั้งไว้', 'warning');
@@ -58,16 +65,20 @@ export class BudgetComponent implements OnInit {
       );
     }
   }
-
+  
+  
+  
   // ฟังก์ชันคำนวณจำนวนวันในเดือนปัจจุบัน
   getDaysInCurrentMonth(): number {
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
   }
 
-  // ฟังก์ชันคำนวณจำนวนเงินที่ควรใช้ต่อวัน
-  getDailyBudget(budget: number): number {
-    return budget / this.daysInMonth;
+  // ฟังก์ชันคำนวณจำนวนเงินที่ควรเหลือในวันที่เหลือของเดือน
+  getRemainingBudget(budget: number): number {
+    const today = new Date();
+    const daysRemaining = this.daysInMonth - today.getDate(); // จำนวนวันที่เหลือในเดือนนี้
+    return budget * daysRemaining; // คำนวณงบประมาณที่ควรมีสำหรับวันที่เหลือ
   }
 
   // ฟังก์ชันบันทึกงบประมาณ
@@ -75,7 +86,7 @@ export class BudgetComponent implements OnInit {
     const filteredCategories = this.expenseCategories.map(category => ({
       UserId: this.userId,
       CategoryId: category.CategoryId,
-      budget: category.budget
+      budget: category.budget || 0 // ตรวจสอบว่ามีค่า budget หรือไม่
     }));
 
     if (filteredCategories.length > 0) {
