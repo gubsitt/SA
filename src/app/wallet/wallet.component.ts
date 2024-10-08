@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
-import { IncomeExpenseService } from '../service/income-expene.service';  // ใช้ Service ที่คุณส่งมา
+import { WalletService } from '../service/wallet.service';  // ใช้ WalletService ที่คุณสร้างไว้
 
 // สร้าง interface ภายในไฟล์นี้เลย
 interface Income {
@@ -10,6 +10,7 @@ interface Income {
   description: string;
   categoryId: number;
   userId: number;
+  date: string;  // เพิ่มฟิลด์วันที่
 }
 
 interface Expense {
@@ -18,12 +19,14 @@ interface Expense {
   description: string;
   categoryId: number;
   userId: number;
+  date: string;  // เพิ่มฟิลด์วันที่
 }
 
 interface Transaction {
   type: 'income' | 'expense';  // ระบุชนิดของ transaction
   description: string;
   amount: number;
+  date: string;  // เพิ่มฟิลด์วันที่เพื่อจัดเรียง
 }
 
 @Component({
@@ -39,7 +42,7 @@ export class WalletComponent implements OnInit {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private incomeExpenseService: IncomeExpenseService  // ใช้ service ที่คุณให้มา
+    private walletService: WalletService  // ใช้ WalletService ที่คุณสร้างไว้
   ) {
     Chart.register(...registerables);
   }
@@ -54,15 +57,15 @@ export class WalletComponent implements OnInit {
     const userId = sessionStorage.getItem('userId');
     if (userId) {
       // ดึงรายได้และรายจ่ายจาก service
-      this.incomeExpenseService.getIncomes(parseInt(userId, 10)).subscribe(
+      this.walletService.getIncomes(parseInt(userId, 10)).subscribe(
         (incomeData: { incomes: Income[] }) => {
           this.totalIncome = this.calculateTotal(incomeData.incomes);
-          this.addTransactions(incomeData.incomes, 'income');  // เพิ่ม transaction ของรายรับ
-
-          this.incomeExpenseService.getExpenses(parseInt(userId, 10)).subscribe(
+          this.walletService.getExpenses(parseInt(userId, 10)).subscribe(
             (expenseData: { expenses: Expense[] }) => {
               this.totalExpense = this.calculateTotal(expenseData.expenses);
-              this.addTransactions(expenseData.expenses, 'expense');  // เพิ่ม transaction ของรายจ่าย
+
+              // รวมรายการรายรับและรายจ่ายเข้าด้วยกัน
+              this.combineAndSortTransactions(incomeData.incomes, expenseData.expenses);
 
               this.calculateTotalBalance();  // คำนวณยอดคงเหลือ
               this.renderFinanceChart();  // เรนเดอร์แผนภูมิการเงิน
@@ -87,13 +90,28 @@ export class WalletComponent implements OnInit {
     this.totalBalance = this.totalIncome - this.totalExpense;
   }
 
-  addTransactions(items: any[], type: 'income' | 'expense') {
-    const transactions = items.map(item => ({
-      type,
-      description: item.description,
-      amount: item.amount
+  // ฟังก์ชันรวมและจัดเรียงรายการรายรับและรายจ่ายตามวันที่
+  combineAndSortTransactions(incomes: Income[], expenses: Expense[]) {
+    // แปลงรายการรายรับและรายจ่ายเป็นรูปแบบ transaction เดียวกัน
+    const incomeTransactions: Transaction[] = incomes.map(income => ({
+      type: 'income' as 'income',  // ระบุชนิดของ transaction เป็น 'income'
+      description: income.description,
+      amount: income.amount,
+      date: income.date
     }));
-    this.transactions.push(...transactions);
+
+    const expenseTransactions: Transaction[] = expenses.map(expense => ({
+      type: 'expense' as 'expense',  // ระบุชนิดของ transaction เป็น 'expense'
+      description: expense.description,
+      amount: expense.amount,
+      date: expense.date
+    }));
+
+    // รวมรายการรายรับและรายจ่ายเข้าด้วยกัน
+    this.transactions = [...incomeTransactions, ...expenseTransactions];
+
+    // จัดเรียงตามวันที่ (จากใหม่ไปเก่า)
+    this.transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }
 
   renderFinanceChart() {
@@ -113,7 +131,7 @@ export class WalletComponent implements OnInit {
         datasets: [{
           label: 'แผนภูมิการเงิน',
           data: chartData,
-          backgroundColor: ['#36A2EB', '#FF6384'],
+          backgroundColor: [  '#4caf50', '#ff6b6b' ],
         }]
       },
       options: {
@@ -123,4 +141,3 @@ export class WalletComponent implements OnInit {
     });
   }
 }
-  

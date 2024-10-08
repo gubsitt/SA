@@ -75,7 +75,7 @@ router.post('/save-budgets', async (req, res) => {
         return res.status(400).json({ error: 'Budget cannot be negative' });
       }
 
-      const frequency = 'Daily';
+      const frequency = 'Monthly';
 
       const result = await pool.request()
         .input('userId', sql.Int, category.UserId)

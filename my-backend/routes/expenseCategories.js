@@ -1,29 +1,29 @@
-const express = require('express');
-const router = express.Router();
-const { sql, poolPromise } = require('../config/dbconfig');
+    const express = require('express');
+    const router = express.Router();
+    const { sql, poolPromise } = require('../config/dbconfig');
 
-// POST route สำหรับเพิ่มหมวดหมู่รายจ่าย
-router.post('/expense-categories', async (req, res) => {
-    const { categoryName, userId } = req.body;
-    console.log('Received expense category name:', categoryName, 'for userId:', userId); // ตรวจสอบข้อมูลที่ส่งมา
+    // POST route สำหรับเพิ่มหมวดหมู่รายจ่าย
+    router.post('/expense-categories', async (req, res) => {
+        const { categoryName, userId } = req.body;
+        console.log('Received expense category name:', categoryName, 'for userId:', userId); // ตรวจสอบข้อมูลที่ส่งมา
 
-    if (!categoryName || !userId) {
-        return res.status(400).json({ error: 'Category name and userId are required' });
-    }
+        if (!categoryName || !userId) {
+            return res.status(400).json({ error: 'Category name and userId are required' });
+        }
 
-    try {
-        const pool = await poolPromise;
-        await pool.request()
-            .input('categoryName', sql.NVarChar, categoryName)
-            .input('userId', sql.Int, userId)  // เพิ่ม userId
-            .query('INSERT INTO ExpenseCategories (CategoryName, UserId) VALUES (@categoryName, @userId)');
+        try {
+            const pool = await poolPromise;
+            await pool.request()
+                .input('categoryName', sql.NVarChar, categoryName)
+                .input('userId', sql.Int, userId)  // เพิ่ม userId
+                .query('INSERT INTO ExpenseCategories (CategoryName, UserId) VALUES (@categoryName, @userId)');
 
-        res.json({ message: 'Expense category added successfully' });
-    } catch (err) {
-        console.error('Error adding expense category:', err);
-        res.status(500).json({ error: 'Error adding expense category' });
-    }
-});
+            res.json({ message: 'Expense category added successfully' });
+        } catch (err) {
+            console.error('Error adding expense category:', err);
+            res.status(500).json({ error: 'Error adding expense category' });
+        }
+    });
 
 // DELETE route สำหรับลบหมวดหมู่รายจ่าย
 router.delete('/expense-categories/:id', async (req, res) => {
@@ -42,6 +42,20 @@ router.delete('/expense-categories/:id', async (req, res) => {
 
         // เริ่มต้น transaction
         await transaction.begin();
+
+        // ตรวจสอบว่าเป็นหมวดหมู่สาธารณะหรือไม่
+        const checkCategoryRequest = new sql.Request(transaction);
+        const categoryResult = await checkCategoryRequest
+            .input('expenseCategoryId', sql.Int, expenseCategoryId)
+            .query('SELECT UserId FROM ExpenseCategories WHERE CategoryId = @expenseCategoryId;');
+
+        const category = categoryResult.recordset[0];
+        
+        if (category.UserId === null) {
+            // หมวดหมู่เป็นหมวดหมู่สาธารณะ ห้ามลบ
+            await transaction.rollback();
+            return res.status(400).json({ error: 'Cannot delete public category.' });
+        }
 
         // ตรวจสอบว่ามีรายจ่ายในหมวดหมู่นี้หรือไม่
         const checkRequest = new sql.Request(transaction);
@@ -83,5 +97,6 @@ router.delete('/expense-categories/:id', async (req, res) => {
         res.status(500).json({ error: 'Error deleting expense category' });
     }
 });
+    
 
-module.exports = router;
+    module.exports = router;

@@ -14,6 +14,10 @@ router.get('/export-transactions-excel', async (req, res) => {
   try {
     const pool = await poolPromise;
     let query = '';
+
+    // แปลง startDate และ endDate เพื่อให้ครอบคลุมเวลาทั้งวัน
+    const startDateTime = new Date(`${startDate}T00:00:00`);
+    const endDateTime = new Date(`${endDate}T23:59:59`);
     
     // สร้าง query สำหรับดึงข้อมูลรายรับหรือรายจ่าย
     if (type === 'expense') {
@@ -40,8 +44,8 @@ router.get('/export-transactions-excel', async (req, res) => {
 
     const result = await pool.request()
       .input('userId', sql.Int, userId)
-      .input('startDate', sql.DateTime, startDate)
-      .input('endDate', sql.DateTime, endDate)
+      .input('startDate', sql.DateTime, startDateTime)  // ใช้ startDateTime แปลงเวลาเริ่มต้น
+      .input('endDate', sql.DateTime, endDateTime)  // ใช้ endDateTime แปลงเวลาสิ้นสุด
       .query(query);
 
     // สร้างไฟล์ Excel

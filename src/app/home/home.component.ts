@@ -44,6 +44,11 @@ export class HomeComponent implements OnInit {
   balance: number = 0;
   totalBudget: number = 0;
   userId: number = 0;
+  startDate: string = '';
+  endDate: string = '';
+
+  filteredExpenses: Expense[];
+  filteredIncomes: Income[];
 
   constructor(
       private incomeExpenseService: IncomeExpenseService,
@@ -57,7 +62,8 @@ export class HomeComponent implements OnInit {
     this.loadCategories();
     this.loadBalance();
     this.loadIncomesAndExpenses();
-    this.loadExpenseCategoriesAndBalance();    
+    this.loadExpenseCategoriesAndBalance();
+    this.filterByDate();  // เรียงลำดับทันทีเมื่อเริ่มต้น    
     console.log("Incomes:", this.incomes);
     console.log("Expenses:", this.expenses);
      
@@ -152,9 +158,11 @@ export class HomeComponent implements OnInit {
     if (this.userId > 0) {
       this.incomeExpenseService.getIncomes(this.userId).subscribe(
         (response: any) => {
-          this.incomes = response.incomes;
+          this.incomes = response.incomes || []; // กำหนดค่าเริ่มต้นให้เป็นอาร์เรย์เปล่าถ้าไม่มีข้อมูล
+          this.filteredIncomes = [...this.incomes]; // กำหนดค่าเริ่มต้นให้ filteredIncomes
+          this.sortByDate(); // เรียงลำดับจากใหม่ไปเก่า
+          this.filteredIncomes = this.filteredIncomes.slice(0, 7); // แสดงแค่ 7 รายการแรก
           this.cdRef.detectChanges();
-          console.log(this.incomes);  // ตรวจสอบข้อมูลใน console
         },
         (error) => {
           console.error('Error loading incomes:', error);
@@ -163,18 +171,57 @@ export class HomeComponent implements OnInit {
   
       this.incomeExpenseService.getExpenses(this.userId).subscribe(
         (response: any) => {
-          this.expenses = response.expenses;
+          this.expenses = response.expenses || []; // กำหนดค่าเริ่มต้นให้เป็นอาร์เรย์เปล่าถ้าไม่มีข้อมูล
+          this.filteredExpenses = [...this.expenses]; // กำหนดค่าเริ่มต้นให้ filteredExpenses
+          this.sortByDate(); // เรียงลำดับจากใหม่ไปเก่า
+          this.filteredExpenses = this.filteredExpenses.slice(0, 7); // แสดงแค่ 7 รายการแรก
           this.cdRef.detectChanges();
-          console.log(this.expenses);  // ตรวจสอบข้อมูลใน console
         },
         (error) => {
           console.error('Error loading expenses:', error);
-        } 
+        }
       );
     } else {
       console.error('No valid userId found.');
     }
   }
+  
+  
+
+
+filterByDate() {
+  if (this.startDate && this.endDate) {
+    const start = new Date(this.startDate).setHours(0, 0, 0, 0); // ตั้งค่าเริ่มต้นวันที่เป็นเวลาเที่ยงคืน
+    const end = new Date(this.endDate).setHours(23, 59, 59, 999); // ตั้งค่าสิ้นสุดวันที่เป็นก่อนเที่ยงคืนของวันถัดไป
+
+    // กรองรายการรายรับ
+    this.filteredIncomes = this.incomes.filter(income => {
+      const incomeDate = new Date(income.date).setHours(0, 0, 0, 0); // ตัดเวลาจากวันที่ในรายรับ
+      return incomeDate >= start && incomeDate <= end;
+    });
+
+    // กรองรายการรายจ่าย
+    this.filteredExpenses = this.expenses.filter(expense => {
+      const expenseDate = new Date(expense.date).setHours(0, 0, 0, 0); // ตัดเวลาจากวันที่ในรายจ่าย
+      return expenseDate >= start && expenseDate <= end;
+    });
+
+    this.sortByDate();  // เรียงลำดับจากใหม่ไปเก่า
+  }
+}
+
+  
+  sortByDate() {
+  if (this.filteredIncomes && this.filteredIncomes.length) {
+    this.filteredIncomes.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }
+
+  if (this.filteredExpenses && this.filteredExpenses.length) {
+    this.filteredExpenses.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }
+}
+
+  
 
 
   submitIncome() {
@@ -185,7 +232,7 @@ export class HomeComponent implements OnInit {
       // เพิ่มรายรับใหม่
       this.incomeExpenseService.submitIncome(this.income.amount, this.income.description, this.income.CategoryId, this.userId).subscribe(
         (response: any) => {
-          Swal.fire('Success', 'Income added successfully!', 'success');
+          Swal.fire('สำเร็จ', 'เพิ่มรายรับเรียบร้อย  !', 'success');
           this.loadIncomesAndExpenses(); // เรียกใช้หลังจากบันทึกสำเร็จเพื่อโหลดข้อมูลใหม่
           this.income = { incomeId: 0, amount: 0, description: '', CategoryId: 0 }; // ล้างข้อมูลในฟอร์ม
           this.updateBalance();

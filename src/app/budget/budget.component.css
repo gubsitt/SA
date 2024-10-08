@@ -65,7 +65,7 @@ body, html {
 
 .category-item {
     background-color: #f9f9f9;
-    padding: 20px 40px;
+    padding: 15px 20px;
     border-radius: 20px;
     text-align: center;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
@@ -73,27 +73,27 @@ body, html {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s;    
 }
 
 .category-item img {
-    width: 80px;
-    height: 80px;
+    width: 50px;
+    height: 50px;
     margin-bottom: 15px;
 }
 
 .category-item p {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
     color: #333;
     margin: 10px 0;
 }
 
 .budget-input {
-    width: 100%;
-    padding: 10px;
+    width: 70%;
+    padding: 8px;
     margin-top: 10px;
-    font-size: 16px;
+    font-size: 18   px;
     border-radius: 10px;
     border: 1px solid #ddd;
     text-align: center;

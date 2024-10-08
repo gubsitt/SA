@@ -27,27 +27,40 @@ router.post('/income-categories', async (req, res) => {
     
 
   // DELETE route สำหรับลบหมวดหมู่รายรับ
+// DELETE route สำหรับลบหมวดหมู่รายรับ
 router.delete('/income-categories/:id', async (req, res) => {
   const incomeCategoryId = req.params.id;
   const userId = req.query.userId; // รับ userId มาจาก query parameter
 
   if (!userId) {
-      return res.status(400).json({ error: 'UserId is required' });
+    return res.status(400).json({ error: 'UserId is required' });
   }
 
   try {
-      const pool = await poolPromise;
-      await pool.request()
-        .input('incomeCategoryId', sql.Int, incomeCategoryId)
-        .input('userId', sql.Int, userId)  // เช็คว่าเป็นหมวดหมู่ของ user นั้นจริง
-        .query('DELETE FROM IncomeCategories WHERE CategoryId = @incomeCategoryId AND UserId = @userId');
+    const pool = await poolPromise;
+    // ตรวจสอบว่าหมวดหมู่นี้เป็นของ user หรือไม่
+    const checkCategory = await pool.request()
+      .input('incomeCategoryId', sql.Int, incomeCategoryId)
+      .query('SELECT UserId FROM IncomeCategories WHERE CategoryId = @incomeCategoryId');
 
-      res.json({ message: 'Income category deleted successfully' });
+    const category = checkCategory.recordset[0];
+    if (category.UserId === null) {
+      return res.status(400).json({ error: 'Cannot delete public category' });
+    }
+
+    // ลบหมวดหมู่ที่เชื่อมโยงกับ user นั้น
+    await pool.request()
+      .input('incomeCategoryId', sql.Int, incomeCategoryId)
+      .input('userId', sql.Int, userId)
+      .query('DELETE FROM IncomeCategories WHERE CategoryId = @incomeCategoryId AND UserId = @userId');
+
+    res.json({ message: 'Income category deleted successfully' });
   } catch (err) {
-      console.error('Error deleting income category:', err);
-      res.status(500).json({ error: 'Error deleting income category' });
+    console.error('Error deleting income category:', err);
+    res.status(500).json({ error: 'Error deleting income category' });
   }
 });
+
 
 
 

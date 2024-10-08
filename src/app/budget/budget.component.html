@@ -1,30 +1,30 @@
-<div class="outer-wrapper">
-    <div class="wrapper">
-      <!-- ส่วนหัวของหน้า -->
-      <div class="header mt-4">
-        <h2>ตั้งงบประมาณรายวันตามหมวดหมู่</h2>
-      </div>
-  
-      <!-- ส่วนตั้งงบประมาณในหมวดหมู่ต่างๆ -->
-      <div class="category-list">
-        <div class="category-item" *ngFor="let category of expenseCategories">
-          <img src="https://cdn-icons-png.flaticon.com/512/1037/1037762.png" alt="{{ category.CategoryName }}">
-          <p>{{ category.CategoryName }}</p>
-          
-          <!-- Input สำหรับผู้ใช้กรอกงบประมาณรายวัน -->
-          <p class="daily-budget">ตั้งงบประมาณที่ใช้ต่อวัน (฿):</p>
-          <input type="number" class="budget-input" placeholder="ตั้งงบประมาณต่อวัน (฿)" [(ngModel)]="category.budget">
-  
-          <!-- แสดงจำนวนเงินที่ควรเหลืออยู่สำหรับวันที่เหลือในเดือน -->
-          <p class="remaining-budget">ควรมีเงินในวันที่เหลือ: 
-            {{ getRemainingBudget(category.budget) | number : '1.2-2' }} ฿</p>
+  <div class="outer-wrapper">
+      <div class="wrapper">
+        <!-- ส่วนหัวของหน้า -->
+        <div class="header mt-4">
+          <h2>ตั้งงบประมาณรายวันตามหมวดหมู่</h2>
+        </div>
+    
+        <!-- ส่วนตั้งงบประมาณในหมวดหมู่ต่างๆ -->
+        <div class="category-list">
+          <div class="category-item" *ngFor="let category of expenseCategories">
+            <img src="https://cdn-icons-png.flaticon.com/512/1037/1037762.png" alt="{{ category.CategoryName }}">
+            <p>{{ category.CategoryName }}</p>
+            
+            <!-- Input สำหรับผู้ใช้กรอกงบประมาณรายวัน -->
+            <p class="daily-budget">ตั้งงบประมาณที่ใช้ต่อวัน (฿):</p>
+            <input type="number" class="budget-input" placeholder="ตั้งงบประมาณต่อวัน (฿)" [(ngModel)]="category.budget">
+    
+            <!-- แสดงจำนวนเงินที่ควรเหลืออยู่สำหรับวันที่เหลือในเดือน -->
+            <p class="remaining-budget">ควรมีเงินในวันที่เหลือ: 
+              {{ getRemainingBudget(category.budget) | number : '1.2-2' }} ฿</p>
+          </div>
+        </div>
+    
+        <!-- ปุ่มบันทึกงบประมาณ -->
+        <div class="save-budget text-center mt-4">
+          <button class="save-btn btn btn-primary" (click)="saveBudgets()">บันทึกงบประมาณ</button>
         </div>
       </div>
-  
-      <!-- ปุ่มบันทึกงบประมาณ -->
-      <div class="save-budget text-center mt-4">
-        <button class="save-btn btn btn-primary" (click)="saveBudgets()">บันทึกงบประมาณ</button>
-      </div>
     </div>
-  </div>
-  
+    

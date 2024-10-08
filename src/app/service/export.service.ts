@@ -9,24 +9,26 @@ export class ExportService {
 
   constructor(private http: HttpClient) {}
 
-  // ฟังก์ชันเพื่อดาวน์โหลดไฟล์ Excel ตามช่วงวันที่ที่ผู้ใช้เลือก
-  exportTransactions(userId: number, startDate: string, endDate: string, type: string): void {
-    const params = new HttpParams()
-      .set('userId', userId.toString())
-      .set('startDate', startDate)
-      .set('endDate', endDate)
-      .set('type', type); // สามารถเป็น 'income' หรือ 'expense'
-
-    this.http.get(`${this.baseUrl}`, { params, responseType: 'blob' }).subscribe((response: Blob) => {
-      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const url = window.URL.createObjectURL(blob);
-      const anchor = document.createElement('a');
-      anchor.href = url;
-      anchor.download = `${type}_report_${startDate}_to_${endDate}.xlsx`;
-      anchor.click();
-      window.URL.revokeObjectURL(url);
-    }, error => {
-      console.error('Error downloading the file', error);
-    });
-  }
+    // ฟังก์ชันเพื่อดาวน์โหลดไฟล์ Excel ตามช่วงวันที่ที่ผู้ใช้เลือก
+    exportTransactions(userId: number, startDate: string, endDate: string, type: string): void {
+      const params = new HttpParams()
+        .set('userId', userId.toString())
+        .set('startDate', startDate)
+        .set('endDate', endDate)
+        .set('type', type);
+    
+      this.http.get(`${this.baseUrl}`, { params, responseType: 'blob' }).subscribe((response: Blob) => {
+        console.log('API Response:', response); // เพิ่ม log ตรงนี้
+        const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = window.URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = `${type}_report_${startDate}_to_${endDate}.xlsx`;
+        anchor.click();
+        window.URL.revokeObjectURL(url);
+      }, error => {
+        console.error('Error downloading the file', error);
+      });
+    }
+    
 }

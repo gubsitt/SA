@@ -104,8 +104,12 @@
           datasets: [{
             label: 'ค่าใช้จ่าย',
             data: chartData,
-            backgroundColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff', '#ff9f40', '#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff', '#ff9f40'],
-          }]
+            backgroundColor: [
+              '#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff', '#ff9f40', // สีเดิม
+              '#e74c3c', '#3498db', '#2ecc71', '#9b59b6', '#f1c40f', '#e67e22', // สีเพิ่มเติม
+              '#1abc9c', '#e84393', '#34495e', '#16a085', '#27ae60', '#d35400', // สีเพิ่มเติม
+              '#7f8c8d', '#8e44ad', '#2c3e50', '#c0392b', '#2980b9', '#f39c12', // สีเพิ่มเติม
+          ]          }]
         },
         options: {
           responsive: true,

@@ -40,13 +40,18 @@ router.get('/expense-categories', async (req, res) => {
     const pool = await poolPromise;
     const result = await pool.request()
       .input('userId', sql.Int, userId)
-      .query('SELECT * FROM ExpenseCategories WHERE UserId = @userId');
+      .query(`
+        SELECT * FROM ExpenseCategories 
+        WHERE UserId = @userId OR UserId IS NULL
+      `);  // เพิ่มการดึงหมวดหมู่ที่เป็นสาธารณะ (UserId IS NULL)
+    
     res.json(result.recordset);
   } catch (err) {
     console.error('Error fetching expense categories:', err);
     res.status(500).json({ error: 'Error fetching expense categories' });
   }
 });
+
 
 // GET route สำหรับดึงข้อมูลรายจ่ายทั้งหมดของผู้ใช้
 router.get('/expenses', async (req, res) => {

@@ -39,13 +39,18 @@ router.get('/income-categories', async (req, res) => {
     const pool = await poolPromise;
     const result = await pool.request()
       .input('userId', sql.Int, userId)
-      .query('SELECT * FROM IncomeCategories WHERE UserId = @userId');  // ตรวจสอบว่ามีการใช้งาน userId ในการค้นหา
+      .query(`
+        SELECT * FROM IncomeCategories 
+        WHERE UserId = @userId OR UserId IS NULL
+      `);  // เพิ่มการตรวจสอบหมวดหมู่สาธารณะ (UserId IS NULL)
+      
     res.json(result.recordset);
   } catch (err) {
     console.error('Error fetching income categories:', err);
     res.status(500).json({ error: 'Error fetching income categories' });
   }
 });
+
 
 
 // GET route สำหรับดึงข้อมูลรายรับทั้งหมดของผู้ใช้

@@ -15,6 +15,7 @@ const expenseCategories = require('./routes/expenseCategories');
 const searchRoutes = require('./routes/search');
 const budget = require('./routes/budget');
 const excel = require('./routes/excel');
+const wallet = require('./routes/wallet');
 
 // เปิดการใช้งาน CORS
 app.use(cors());
@@ -32,6 +33,7 @@ app.use('/api', expenseCategories);
 app.use('/api', budget);
 app.use('/api', searchRoutes);
 app.use('/api', excel);
+app.use('/api', wallet);
 
 // เริ่มเซิร์ฟเวอร์
 app.listen(port, () => {

@@ -24,18 +24,22 @@ export class ExcelComponent {
   // ฟังก์ชันตรวจสอบและส่งออกข้อมูลรายรับ
   exportIncome(): void {
     if (this.startDate && this.endDate && this.userId) {
+      console.log('Exporting Income - UserID:', this.userId, 'StartDate:', this.startDate, 'EndDate:', this.endDate);
       this.exportService.exportTransactions(this.userId, this.startDate, this.endDate, 'income');
     } else {
       alert('กรุณาเลือกวันที่เริ่มต้นและวันที่สิ้นสุดก่อนส่งออกข้อมูล');
     }
   }
+  
 
   // ฟังก์ชันตรวจสอบและส่งออกข้อมูลรายจ่าย
   exportExpense(): void {
     if (this.startDate && this.endDate && this.userId) {
+      console.log('Exporting Expense - UserID:', this.userId, 'StartDate:', this.startDate, 'EndDate:', this.endDate);
       this.exportService.exportTransactions(this.userId, this.startDate, this.endDate, 'expense');
     } else {
       alert('กรุณาเลือกวันที่เริ่มต้นและวันที่สิ้นสุดก่อนส่งออกข้อมูล');
     }
   }
 }
+  
