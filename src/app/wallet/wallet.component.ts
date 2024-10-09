@@ -3,14 +3,13 @@ import { isPlatformBrowser } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import { WalletService } from '../service/wallet.service';  // ใช้ WalletService ที่คุณสร้างไว้
 
-// สร้าง interface ภายในไฟล์นี้เลย
 interface Income {
   incomeId: number;
   amount: number;
   description: string;
   categoryId: number;
   userId: number;
-  date: string;  // เพิ่มฟิลด์วันที่
+  date: string;
 }
 
 interface Expense {
@@ -19,14 +18,14 @@ interface Expense {
   description: string;
   categoryId: number;
   userId: number;
-  date: string;  // เพิ่มฟิลด์วันที่
+  date: string;
 }
 
 interface Transaction {
-  type: 'income' | 'expense';  // ระบุชนิดของ transaction
+  type: 'income' | 'expense';
   description: string;
   amount: number;
-  date: string;  // เพิ่มฟิลด์วันที่เพื่อจัดเรียง
+  date: string;
 }
 
 @Component({
@@ -35,14 +34,18 @@ interface Transaction {
   styleUrls: ['./wallet.component.css']
 })
 export class WalletComponent implements OnInit {
-  totalBalance: number = 0;     // ยอดคงเหลือ
-  totalIncome: number = 0;      // รายได้ทั้งหมด
-  totalExpense: number = 0;     // รายจ่ายทั้งหมด
-  transactions: Transaction[] = [];  // เก็บข้อมูล transaction ทั้งรายรับและรายจ่าย
+  totalBalance: number = 0;
+  totalIncome: number = 0;
+  totalExpense: number = 0;
+  transactions: Transaction[] = [];
+  filteredTransactions: Transaction[] = [];
+  startDate: string | null = null;
+  endDate: string | null = null;
+  financeChart: any;  // เก็บตัวแปรของ chart เพื่ออัปเดตได้ภายหลัง
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private walletService: WalletService  // ใช้ WalletService ที่คุณสร้างไว้
+    private walletService: WalletService
   ) {
     Chart.register(...registerables);
   }
@@ -68,7 +71,7 @@ export class WalletComponent implements OnInit {
               this.combineAndSortTransactions(incomeData.incomes, expenseData.expenses);
 
               this.calculateTotalBalance();  // คำนวณยอดคงเหลือ
-              this.renderFinanceChart();  // เรนเดอร์แผนภูมิการเงิน
+              this.renderFinanceChart();  // เรนเดอร์แผนภูมิการเงินครั้งแรก
             },
             (error) => {
               console.error('Error fetching expenses:', error);
@@ -92,28 +95,57 @@ export class WalletComponent implements OnInit {
 
   // ฟังก์ชันรวมและจัดเรียงรายการรายรับและรายจ่ายตามวันที่
   combineAndSortTransactions(incomes: Income[], expenses: Expense[]) {
-    // แปลงรายการรายรับและรายจ่ายเป็นรูปแบบ transaction เดียวกัน
     const incomeTransactions: Transaction[] = incomes.map(income => ({
-      type: 'income' as 'income',  // ระบุชนิดของ transaction เป็น 'income'
+      type: 'income' as 'income',
       description: income.description,
       amount: income.amount,
       date: income.date
     }));
 
     const expenseTransactions: Transaction[] = expenses.map(expense => ({
-      type: 'expense' as 'expense',  // ระบุชนิดของ transaction เป็น 'expense'
+      type: 'expense' as 'expense',
       description: expense.description,
       amount: expense.amount,
       date: expense.date
     }));
 
-    // รวมรายการรายรับและรายจ่ายเข้าด้วยกัน
     this.transactions = [...incomeTransactions, ...expenseTransactions];
 
     // จัดเรียงตามวันที่ (จากใหม่ไปเก่า)
     this.transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    this.filteredTransactions = [...this.transactions];
   }
 
+  // ฟังก์ชันกรองตามวันที่และอัปเดตแผนภูมิ
+  filterTransactions() {
+    if (this.startDate && this.endDate) {
+      const start = new Date(this.startDate).setHours(0, 0, 0, 0);
+      const end = new Date(this.endDate).setHours(23, 59, 59, 999);
+
+      this.filteredTransactions = this.transactions.filter(transaction => {
+        const transactionDate = new Date(transaction.date).getTime();
+        return transactionDate >= start && transactionDate <= end;
+      });
+    } else {
+      this.filteredTransactions = [...this.transactions];
+    }
+
+    // คำนวณรายรับและรายจ่ายจากข้อมูลที่กรอง
+    this.totalIncome = this.filteredTransactions
+      .filter(transaction => transaction.type === 'income')
+      .reduce((sum, income) => sum + income.amount, 0);
+
+    this.totalExpense = this.filteredTransactions
+      .filter(transaction => transaction.type === 'expense')
+      .reduce((sum, expense) => sum + expense.amount, 0);
+
+    // อัปเดตยอดคงเหลือและกราฟใหม่
+    this.calculateTotalBalance();
+    this.updateFinanceChart();
+  }
+
+  // ฟังก์ชันเรนเดอร์แผนภูมิการเงินครั้งแรก
   renderFinanceChart() {
     const ctx = document.getElementById('financeChart') as HTMLCanvasElement;
     if (!ctx) {
@@ -124,14 +156,14 @@ export class WalletComponent implements OnInit {
     const chartData = [this.totalIncome, this.totalExpense];
     const chartLabels = ['รายได้', 'รายจ่าย'];
 
-    new Chart(ctx, {
+    this.financeChart = new Chart(ctx, {
       type: 'pie',
       data: {
         labels: chartLabels,
         datasets: [{
           label: 'แผนภูมิการเงิน',
           data: chartData,
-          backgroundColor: [  '#4caf50', '#ff6b6b' ],
+          backgroundColor: ['#4caf50', '#ff6b6b'],
         }]
       },
       options: {
@@ -139,5 +171,13 @@ export class WalletComponent implements OnInit {
         maintainAspectRatio: true
       }
     });
+  }
+
+  // ฟังก์ชันอัปเดตแผนภูมิการเงิน
+  updateFinanceChart() {
+    if (this.financeChart) {
+      this.financeChart.data.datasets[0].data = [this.totalIncome, this.totalExpense];
+      this.financeChart.update();
+    }
   }
 }

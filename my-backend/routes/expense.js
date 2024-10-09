@@ -12,6 +12,52 @@ router.post('/expenses', async (req, res) => {
 
   try {
     const pool = await poolPromise;
+
+    // ตรวจสอบงบประมาณรายวันสำหรับผู้ใช้ในหมวดหมู่ที่เลือก
+    const budgetResult = await pool.request()
+      .input('userId', sql.Int, userId)
+      .input('categoryId', sql.Int, categoryId)
+      .query(`
+        SELECT B.Amount AS Budget
+        FROM Budget B
+        WHERE B.UserId = @userId AND B.CategoryId = @categoryId
+      `);
+
+    const budget = budgetResult.recordset[0]?.Budget || 0;
+
+    if (budget <= 0) {
+      return res.status(400).json({ error: 'No budget set for this category' });
+    }
+
+    // คำนวณจำนวนเงินที่ใช้ไปในวันเดียวกันนี้ (ตรวจสอบวันที่ในเขตเวลาเดียวกัน)
+    const todayStart = new Date();
+    todayStart.setUTCHours(0, 0, 0, 0); // ตั้งค่าเวลาเป็น 00:00 UTC
+    const todayEnd = new Date();
+    todayEnd.setUTCHours(23, 59, 59, 999); // ตั้งค่าเวลาเป็น 23:59 UTC
+
+    const expenseResult = await pool.request()
+      .input('userId', sql.Int, userId)
+      .input('categoryId', sql.Int, categoryId)
+      .input('todayStart', sql.DateTime, todayStart)
+      .input('todayEnd', sql.DateTime, todayEnd)
+      .query(`
+        SELECT SUM(amount) AS TotalExpenses
+        FROM Expenses
+        WHERE UserID = @userId 
+        AND CategoryId = @categoryId 
+        AND date BETWEEN @todayStart AND @todayEnd
+      `);
+
+    const totalExpensesToday = expenseResult.recordset[0]?.TotalExpenses || 0;
+
+    // ตรวจสอบว่ารายจ่ายในวันนี้เกินงบประมาณรายวันหรือไม่
+    if (totalExpensesToday + amount > budget) {
+      return res.status(400).json({ 
+        message: `รายจ่ายในวันนี้เกินกว่างบประมาณรายวันแล้ว! งบประมาณ: ฿${budget}, รายจ่ายทั้งหมดวันนี้: ฿${totalExpensesToday}`
+      });
+    }
+
+    // ถ้ารายจ่ายไม่เกินงบประมาณ ให้บันทึกรายจ่าย
     await pool.request()
       .input('amount', sql.Decimal(18, 2), amount)
       .input('description', sql.NVarChar, description)
@@ -29,6 +75,7 @@ router.post('/expenses', async (req, res) => {
     res.status(500).json({ error: 'Error saving expense' });
   }
 });
+
 
 // GET route สำหรับดึงหมวดหมู่รายจ่าย (Expense Categories)
 router.get('/expense-categories', async (req, res) => {
@@ -69,6 +116,45 @@ router.get('/expenses', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch expenses' });
   }
 });
+
+// GET route สำหรับดึงข้อมูลรายจ่ายตามช่วงวันที่
+router.get('/expenses-by-date', async (req, res) => {
+  const { userId, startDate, endDate } = req.query;
+
+  if (!userId) {
+    return res.status(400).json({ error: 'User ID is required' });
+  }
+
+  try {
+    const pool = await poolPromise;
+    const request = pool.request().input('userId', sql.Int, userId);
+
+    // เช็คว่าได้ส่ง startDate และ endDate มาหรือไม่
+    if (startDate) {
+      request.input('startDate', sql.DateTime, new Date(startDate));
+    }
+    if (endDate) {
+      request.input('endDate', sql.DateTime, new Date(endDate));
+    }
+
+    // สร้าง query ที่รองรับการกรองวันที่หรือไม่กรอง
+    const query = `
+      SELECT * 
+      FROM Expenses 
+      WHERE UserID = @userId
+      ${startDate ? 'AND date >= @startDate' : ''} 
+      ${endDate ? 'AND date <= @endDate' : ''}
+    `;
+
+    const result = await request.query(query);
+
+    res.json({ expenses: result.recordset });
+  } catch (err) {
+    console.error('Error fetching expenses by date:', err);
+    res.status(500).json({ error: 'Failed to fetch expenses' });
+  }
+});
+
 
 // DELETE route สำหรับลบรายจ่าย
 router.delete('/expenses/:id', async (req, res) => {

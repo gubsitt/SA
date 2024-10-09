@@ -70,6 +70,46 @@ router.get('/incomes', async (req, res) => {
   }
 });
 
+// GET route สำหรับดึงข้อมูลรายรับโดยกรองตามช่วงวันที่
+router.get('/incomes-by-date', async (req, res) => {
+  const { userId, startDate, endDate } = req.query;
+
+  if (!userId) {
+    return res.status(400).json({ error: 'User ID is required' });
+  }
+
+  try {
+    const pool = await poolPromise;
+    const request = pool.request().input('userId', sql.Int, userId);
+
+    // เช็คว่าได้ส่ง startDate และ endDate มาหรือไม่
+    if (startDate) {
+      request.input('startDate', sql.DateTime, new Date(startDate));
+    }
+    if (endDate) {
+      request.input('endDate', sql.DateTime, new Date(endDate));
+    }
+
+    // สร้าง query ที่รองรับการกรองวันที่หรือไม่กรอง
+    const query = `
+      SELECT * 
+      FROM Incomes 
+      WHERE UserID = @userId
+      ${startDate ? 'AND date >= @startDate' : ''} 
+      ${endDate ? 'AND date <= @endDate' : ''}
+    `;
+
+    const result = await request.query(query);
+
+    res.json({ incomes: result.recordset });
+  } catch (err) {
+    console.error('Error fetching incomes by date:', err);
+    res.status(500).json({ error: 'Failed to fetch incomes' });
+  }
+});
+
+
+
 // DELETE route สำหรับลบรายรับ
 router.delete('/incomes/:id', async (req, res) => {
   const incomeId = req.params.id;

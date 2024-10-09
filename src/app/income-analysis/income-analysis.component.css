@@ -193,4 +193,50 @@ canvas {
       flex-direction: column;
       text-align: center;
   }
+  
 }
+
+.date-filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.date-filters label {
+  margin-right: 10px;
+  font-weight: bold;
+  color: #333;
+}
+
+.date-filters input[type="date"] {
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 20px;
+}
+
+.date-filters button {
+  padding: 8px 15px;
+  background-color: #d8c623;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.date-filters button:hover {
+  background-color: #aa9a07;
+}
+
+.date-filters input[type="date"]:focus, 
+.date-filters button:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}  

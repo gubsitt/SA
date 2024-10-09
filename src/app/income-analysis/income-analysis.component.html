@@ -1,40 +1,51 @@
 <div class="outer-wrapper">
-    <div class="inner-container">
-      <header class="header">
-        <div class="header-center">
-          <h1>การวิเคราะห์รายได้</h1>
+  <div class="inner-container">
+    <header class="header">
+      <div class="header-center">
+        <h1>การวิเคราะห์รายได้</h1>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab" routerLink="/analysis" routerLinkActive="active">รายจ่าย</button>
+      <button class="tab" routerLink="/income-analysis" routerLinkActive="active">รายได้</button>
+      <button class="tab" routerLink="/budget-analysis" routerLinkActive="active">งบประมาณ</button>
+    </nav>
+
+    <!-- ตำแหน่งที่จะแสดงเนื้อหาจากแต่ละ route -->
+    <router-outlet></router-outlet>
+
+    <div class="content">
+      <section id="income" class="section">
+        <div class="date-filters">
+          <label for="startDate">วันที่เริ่มต้น:</label>
+          <input type="date" id="startDate" [(ngModel)]="startDate" />
+
+          <label for="endDate">วันที่สิ้นสุด:</label>
+          <input type="date" id="endDate" [(ngModel)]="endDate" />
+
+          <button (click)="loadIncomeData()">กรอง</button>
         </div>
-      </header>
-  
-      <nav class="tabs">
-        <button class="tab" routerLink="/analysis" routerLinkActive="active">รายจ่าย</button>
-        <button class="tab" routerLink="/income-analysis" routerLinkActive="active">รายได้</button>
-        <button class="tab" routerLink="/budget-analysis" routerLinkActive="active">งบประมาณ</button>
-      </nav>
-      
-      <!-- ที่นี่จะเป็นตำแหน่งที่แสดงเนื้อหาจากแต่ละ route -->
-      <router-outlet></router-outlet>
-      
-      <div class="content">
-        <section id="income" class="section">
-          <div class="chart-container"> 
-            <canvas id="myIncomeChart" width="400" height="400"></canvas>
-          </div>  
-  
-          <div class="details-container mt-4">
-            <h3>รายละเอียดรายได้</h3>
-            <div *ngFor="let detail of incomeDetails" class="detail-item">
-              <div class="icon">
-                <img [src]="detail.icon" alt="{{detail.name}}">
-              </div>
-              <div class="text">{{detail.name}}: ฿{{detail.amount}} ({{detail.percentage}}%)</div>
-              <div class="progress-bar">
-                <div class="progress" [style.width]="detail.percentage + '%'"></div>
-              </div>
+
+        <div class="chart-container">
+          <canvas id="myIncomeChart" width="400" height="400"></canvas>
+        </div>
+
+        <div class="details-container mt-4">
+          <h3>รายละเอียดรายได้</h3>
+          <div *ngFor="let detail of incomeDetails" class="detail-item">
+            <div class="icon">
+              <img [src]="detail.icon" alt="{{ detail.name }}" />
+            </div>
+            <div class="text">
+              {{ detail.name }}: ฿{{ detail.amount }} ({{ detail.percentage }}%)
+            </div>
+            <div class="progress-bar">
+              <div class="progress" [style.width]="detail.percentage + '%'"></div>
             </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </div>
   </div>
-  
+</div>

@@ -57,11 +57,23 @@ body, html {
     font-size: 28px;
 }
 
-/* กล่องหมวดหมู่ */
+/* การจัดหมวดหมู่รายรับและรายจ่ายแบบแยก */
+.category-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.income-category, .expense-category {
+    width: 48%; /* ให้หมวดหมู่แต่ละฝั่งมีขนาดเท่ากัน */
+}
+
+/* กล่องหมวดหมู่รายรับและรายจ่าย */
 .category-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* ปรับขนาดอัตโนมัติ */
-    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* ปรับขนาดอัตโนมัติ */
+    gap: 20px;
     justify-items: center;
     width: 100%;
 }
@@ -79,7 +91,6 @@ body, html {
     align-items: center;
     border: 1px solid #ddd;
     width: 100%;
-    max-width: 200px; /* จำกัดขนาดสูงสุดของหมวดหมู่ */
 }
 
 .category-item:hover {
@@ -89,7 +100,7 @@ body, html {
 
 .category-item img {
     width: 50px;
-    height: 5   0px;
+    height: 50px;
     margin-bottom: 15px;
 }
 
@@ -125,7 +136,6 @@ body, html {
     justify-content: space-between;
     width: 100%;
     margin-top: 40px;
-    flex-direction: row; /* เปลี่ยนเป็นแถว */
 }
 
 .add-category {
@@ -180,48 +190,17 @@ input[type="text"] {
     background-color: #0088cc;
 }
 
-.input-group {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-}
-
-input[type="text"] {
-    width: 70%;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    text-align: center;
-}
-
-.add-category button {
-    background-color: #00aeff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.add-category button:hover {
-    background-color: #0088cc;
-}
-
-/* สำหรับหน้าจอขนาดเล็ก */
+/* Responsive สำหรับหน้าจอขนาดเล็ก */
 @media screen and (max-width: 768px) {
-    .category-list {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* ปรับขนาดเล็กลง */
+    .category-container {
+        flex-direction: column;
     }
 
-    .category-item {
-        padding: 10px;
-        max-width: 150px;
+    .income-category, .expense-category {
+        width: 100%; /* กำหนดให้แต่ละส่วนเต็มหน้าจอ */
+        margin-bottom: 20px;
     }
-    
+
     .add-category-container {
         flex-direction: column;
     }
@@ -229,6 +208,6 @@ input[type="text"] {
     .add-category {
         width: 100%;
     }
-
-    
 }
+
+

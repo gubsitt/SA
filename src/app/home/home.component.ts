@@ -245,6 +245,7 @@ filterByDate() {
   }
   
   submitExpense() {
+    // ตรวจสอบว่ายอดรายจ่ายเกินยอดคงเหลือหรือไม่
     if (this.expense.amount > this.balance) {
       Swal.fire({
         title: 'คำเตือน',
@@ -271,18 +272,32 @@ filterByDate() {
       // เพิ่มรายจ่ายใหม่
       this.incomeExpenseService.submitExpense(this.expense.amount, this.expense.description, this.expense.CategoryId, this.expense.isRecurring, this.userId).subscribe(
         (response: any) => {
+          // ถ้าบันทึกสำเร็จ แสดงข้อความสำเร็จ
           Swal.fire('สำเร็จ', 'เพิ่มรายจ่ายเรียบร้อยแล้ว!', 'success');
-          this.loadIncomesAndExpenses(); // เรียกใช้หลังจากบันทึกสำเร็จเพื่อโหลดข้อมูลใหม่
+          this.loadIncomesAndExpenses(); // โหลดข้อมูลใหม่หลังจากบันทึกสำเร็จ
           this.expense = { expenseId: 0, amount: 0, description: '', isRecurring: false, CategoryId: 0 }; // ล้างข้อมูลในฟอร์ม
           this.updateBalance();
         },
         (error) => {
-          console.error('เกิดข้อผิดพลาดในการเพิ่มรายจ่าย:', error);
+          // ตรวจสอบว่า error จาก backend เป็นการแจ้งเตือนเกี่ยวกับงบประมาณ
+          if (error.error && error.error.message && error.error.message.includes('เกินกว่างบประมาณรายวัน')) {
+            // แสดงแจ้งเตือนจาก backend
+            Swal.fire({
+              title: 'คำเตือน',
+              text: error.error.message, // ข้อความจาก backend
+              icon: 'warning',
+              confirmButtonText: 'ตกลง'
+            });
+          } else {
+            // กรณีเกิดข้อผิดพลาดทั่วไปอื่นๆ
+            console.error('เกิดข้อผิดพลาดในการเพิ่มรายจ่าย:', error);
+            Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถบันทึกรายจ่ายได้', 'error');
+          }
         }
       );
     }
   }
-
+    
   
 
   // โหลดยอดคงเหลือ

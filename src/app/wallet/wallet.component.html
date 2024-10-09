@@ -1,48 +1,67 @@
 <div class="outer-wrapper">
     <div class="wrapper">
-        <header class="header">
-            <h1>กระเป๋าเงิน</h1>
-        </header>
-
-        <section class="wallet-summary">
-            <div class="balance">
-                <h2>ยอดคงเหลือ</h2>
-                <p>฿{{ totalBalance }}</p>
-            </div>
-            <div class="income-expense">
-                <div class="income">
-                    <h3>รายรับ</h3>
-                    <p>฿{{ totalIncome }}</p>
-                </div>
-                <div class="expense">
-                    <h3>รายจ่าย</h3>
-                    <p>฿{{ totalExpense }}</p>
-                </div>
-            </div>
-        </section>
-
-        <div class="content">
-            <section class="transaction-history">
-                <h2>ประวัติการทำธุรกรรม</h2>
-                <div *ngFor="let transaction of transactions" class="transaction">
-                    <div class="transaction-icon">
-                        <img *ngIf="transaction.type === 'expense'" src="https://cdn-icons-png.flaticon.com/512/1037/1037762.png" alt="Expense Icon">
-                        <img *ngIf="transaction.type === 'income'" src="https://cdn-icons-png.flaticon.com/128/817/817729.png" alt="Income Icon">
-                    </div>
-                    <div class="transaction-details">
-                        <h3>{{ transaction.type === 'income' ? 'รายรับ' : 'รายจ่าย' }}</h3>
-                        <p>{{ transaction.type === 'income' ? '+' : '-' }}฿{{ transaction.amount }}</p>
-                    </div>
-                    <div class="transaction-type" [ngClass]="transaction.type === 'income' ? 'income' : 'expense'">
-                        {{ transaction.type === 'income' ? 'รับ' : 'จ่าย' }}
-                    </div>
-                </div>
-            </section>
-
-            <section class="chart-section">
-                <h2>การวิเคราะห์การใช้จ่าย</h2>
-                <canvas id="financeChart"></canvas>
-            </section>
+      <header class="header">
+        <h1>กระเป๋าเงิน</h1>
+      </header>
+  
+      <section class="wallet-summary">
+        <div class="balance">
+          <h2>ยอดคงเหลือ</h2>
+          <p>฿{{ totalBalance }}</p>
         </div>
+        <div class="income-expense">
+          <div class="income">
+            <h3>รายรับ</h3>
+            <p>฿{{ totalIncome }}</p>
+          </div>
+          <div class="expense">
+            <h3>รายจ่าย</h3>
+            <p>฿{{ totalExpense }}</p>
+          </div>
+        </div>
+      </section>
+  
+      <section class="filter-section">
+        <h3>กรองตามวันที่</h3>
+        <div class="filter-dates">
+          <div class="date-group">
+            <label for="startDate">เริ่มต้น:</label>
+            <input type="date" id="startDate" [(ngModel)]="startDate" (change)="filterTransactions()">
+          </div>
+          <div class="date-group">
+            <label for="endDate">สิ้นสุด:</label>
+            <input type="date" id="endDate" [(ngModel)]="endDate" (change)="filterTransactions()">
+          </div>
+        </div>
+      </section>
+      
+  
+      <!-- ตารางธุรกรรม -->
+      <div class="content">
+        <section class="transaction-history">
+          <h2>ประวัติการทำธุรกรรม</h2>
+          <div *ngFor="let transaction of filteredTransactions" class="transaction">
+            <div class="transaction-icon">
+              <img *ngIf="transaction.type === 'expense'" src="https://cdn-icons-png.flaticon.com/128/5501/5501371.png"
+                alt="Expense Icon">
+              <img *ngIf="transaction.type === 'income'" src="https://cdn-icons-png.flaticon.com/128/817/817729.png"
+                alt="Income Icon">
+            </div>
+            <div class="transaction-details">
+              <h3>{{ transaction.type === 'income' ? 'รายรับ' : 'รายจ่าย' }}</h3>
+              <p>{{ transaction.type === 'income' ? '+' : '-' }}฿{{ transaction.amount }}</p>
+            </div>
+            <div class="transaction-type" [ngClass]="transaction.type === 'income' ? 'income' : 'expense'">
+              {{ transaction.type === 'income' ? 'รับ' : 'จ่าย' }}
+            </div>
+          </div>
+        </section>
+  
+        <section class="chart-section">
+          <h2>การวิเคราะห์การใช้จ่าย</h2>
+          <canvas id="financeChart"></canvas>
+        </section>
+      </div>
     </div>
-</div>
+  </div>
+  

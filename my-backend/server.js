@@ -16,6 +16,7 @@ const searchRoutes = require('./routes/search');
 const budget = require('./routes/budget');
 const excel = require('./routes/excel');
 const wallet = require('./routes/wallet');
+const expenseAnalysis = require('./routes/expenseAnalysisRoutes'); // เพิ่มเส้นทาง Expense Analysis
 
 // เปิดการใช้งาน CORS
 app.use(cors());
@@ -34,6 +35,8 @@ app.use('/api', budget);
 app.use('/api', searchRoutes);
 app.use('/api', excel);
 app.use('/api', wallet);
+app.use('/api', expenseAnalysis); // เพิ่มเส้นทาง Expense Analysis
+
 
 // เริ่มเซิร์ฟเวอร์
 app.listen(port, () => {

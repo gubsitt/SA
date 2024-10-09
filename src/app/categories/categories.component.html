@@ -1,33 +1,50 @@
 <div class="outer-wrapper">
     <div class="wrapper">
         <div class="header">
-            <h2>หมวดหมู่</h2>
+            <h2>หมวดหมู่รายรับและรายจ่าย</h2>
         </div>
 
-        <div class="category-list">
-            <!-- ใช้ ngFor เพื่อแสดงรายการหมวดหมู่จากฐานข้อมูล -->
-            <div class="category-item" *ngFor="let category of incomeCategories">
-                <img src="https://cdn-icons-png.flaticon.com/128/817/817729.png" alt="{{ category.CategoryName }}">
-                <p>{{ category.CategoryName }}</p>
-                <button class="edit-btn" (click)="deleteIncomeCategory(category.CategoryId)">-</button>
+        <!-- จัดการเลย์เอาต์ให้แยกสองฝั่ง -->
+        <div class="category-container" style="display: flex; justify-content: space-between;">
+            <!-- ฝั่งหมวดหมู่รายรับ -->
+            <div class="income-category">
+                <h3>หมวดหมู่รายรับ</h3>
+                <div class="category-list">
+                    <!-- ใช้ ngFor เพื่อแสดงรายการหมวดหมู่รายรับจากฐานข้อมูล -->
+                    <div class="category-item" *ngFor="let category of incomeCategories">
+                        <img src="https://cdn-icons-png.flaticon.com/128/817/817729.png" alt="{{ category.CategoryName }}">
+                        <p>{{ category.CategoryName }}</p>
+                        <button class="edit-btn" (click)="deleteIncomeCategory(category.CategoryId)">-</button>
+                    </div>
+                </div>
             </div>
-            <div class="category-item" *ngFor="let category of expenseCategories">
-                <img src="https://cdn-icons-png.flaticon.com/512/1037/1037762.png" alt="{{ category.CategoryName }}">
-                <p>{{ category.CategoryName }}</p>
-                <button class="edit-btn" (click)="deleteExpenseCategory(category.CategoryId)">-</button>
+
+            <!-- ฝั่งหมวดหมู่รายจ่าย -->
+            <div class="expense-category">
+                <h3>หมวดหมู่รายจ่าย</h3>
+                <div class="category-list">
+                    <!-- ใช้ ngFor เพื่อแสดงรายการหมวดหมู่รายจ่ายจากฐานข้อมูล -->
+                    <div class="category-item" *ngFor="let category of expenseCategories">
+                        <img src="https://cdn-icons-png.flaticon.com/128/5501/5501371.png" alt="{{ category.CategoryName }}">
+                        <p>{{ category.CategoryName }}</p>
+                        <button class="edit-btn" (click)="deleteExpenseCategory(category.CategoryId)">-</button>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="add-category-container">
-            <div class="add-category">
+            <!-- เพิ่มหมวดหมู่รายรับ -->
+            <div class="add-income-category add-category">
                 <h3>เพิ่มหมวดหมู่รายรับ</h3>
                 <div class="input-group">
                     <input type="text" placeholder="ชื่อหมวดหมู่" [(ngModel)]="newIncomeCategory">
                     <button (click)="addIncomeCategory()">+ เพิ่ม</button>
                 </div>
             </div>
-
-            <div class="add-category">
+        
+            <!-- เพิ่มหมวดหมู่รายจ่าย -->
+            <div class="add-expense-category add-category">
                 <h3>เพิ่มหมวดหมู่รายจ่าย</h3>
                 <div class="input-group">
                     <input type="text" placeholder="ชื่อหมวดหมู่" [(ngModel)]="newExpenseCategory">
@@ -35,5 +52,4 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
+        

@@ -18,7 +18,7 @@ export class CategoryService {
   // ฟังก์ชันลบหมวดหมู่รายรับ
   deleteIncomeCategory(categoryId: number, userId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/income-categories/${categoryId}?userId=${userId}`);
-  }
+  } 
 
   // ฟังก์ชันดึงหมวดหมู่รายรับ
   getIncomeCategories(userId: number): Observable<any> {

@@ -184,3 +184,59 @@ html, body {
     width: 100%;
   }
 }
+
+.filter-section {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between; /* ให้ input แต่ละตัวอยู่แยกฝั่ง */
+  align-items: center;
+}
+
+.filter-dates {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.filter-dates label {
+  font-size: 16px;
+  color: #333;
+  margin-right: 10px;
+}
+
+.filter-dates input[type="date"] {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  width: 100%; /* ให้ input มีขนาดเต็ม */
+  max-width: 300px; /* กำหนดขนาดสูงสุดให้ input */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-dates input[type="date"]:focus {
+  border-color: #00aeff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 174, 255, 0.5);
+}
+
+.filter-dates input[type="date"]:hover {
+  border-color: #0088cc;
+}
+
+@media (max-width: 768px) {
+  .filter-section {
+    flex-direction: column;
+  }
+
+  .filter-dates {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

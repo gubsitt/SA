@@ -73,5 +73,15 @@ export class IncomeExpenseService {
     searchTransactions(query: string, userId: number): Observable<any> {
       return this.http.get(`${this.apiUrl}/search`, { params: { query, userId: userId.toString() } });
     }
-  
+ 
+    getExpensesByDate(queryParams: any): Observable<any> {
+      return this.http.get(`${this.apiUrl}/expenses-by-date`, { params: queryParams });
+    }
+    
+    // ฟังก์ชันดึงรายรับโดยกรองตามวันที่
+getIncomesByDate(queryParams: any): Observable<any> {
+  return this.http.get(`${this.apiUrl}/incomes-by-date`, { params: queryParams });
+}
+
+
 }
